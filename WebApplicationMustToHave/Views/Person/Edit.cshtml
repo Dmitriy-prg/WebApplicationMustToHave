@@ -1,0 +1,54 @@
+﻿@using WebApplicationMustToHave.Models;
+@model IPerson
+
+@{
+    ViewData["Title"] = "Человек";
+}
+<h2>Персона </h2> 
+<form asp-action="Edit" asp-controller="Person" asp-route-id="@Model?.Id ?? 0">
+    <p>
+        <!--<input type="number" asp-for="Id" /><br />-->
+        <label asp-for="Surname">Фамилия :</label><br />
+        <input type="text" asp-for="Surname" />
+    </p>
+    <p>
+        <label asp-for="Name">Имя :</label><br />
+        <input type="text" asp-for="Name" />
+    </p>
+    <p>
+        <label asp-for="Patronymic">Отчество :</label><br />
+        <input type="text" asp-for="Patronymic" />
+    </p>
+    <p>
+        <label asp-for="YearBirth">Год рождения :</label><br />
+        <input type="number" asp-for="YearBirth" />
+    </p>
+    <p>
+        <input type="submit" value="Добавить" />
+    </p>
+</form>
+<!--<form method="post" action="Create">
+    <input type="hidden" name="Id" />
+    <table>
+        <tr>
+            <td><p>Фамилия :</p></td>
+            <td><input type="text" name="Surname" /> </td>
+        </tr>
+        <tr>
+            <td><p>Имя :</p></td>
+            <td><input type="text" name="Name" /> </td>
+        </tr>
+        <tr>
+            <td><p>Отчество :</p></td>
+            <td><input type="text" name="Patronymic" /> </td>
+        </tr>
+        <tr>
+            <td><p>Год рождения :</p></td>
+            <td><input type="text" name="YearBirth" /> </td>
+        </tr>
+        <tr>
+            <td><input type="submit" value="Добавить" /> </td>
+            <td></td>
+        </tr>
+    </table>
+</form>-->
