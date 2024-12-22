@@ -5,7 +5,8 @@
     ViewData["Title"] = "Человек";
 }
 <h2>Персона </h2> 
-<form asp-action="Edit" asp-controller="Person" asp-route-id="@Model?.Id ?? 0">
+<!--<form asp-action="Edit" asp-controller="Person" asp-route-id="@Model?.Id ?? 0">-->
+<form asp-action="Edit" asp-controller="Person">
     <p>
         <!--<input type="number" asp-for="Id" /><br />-->
         <label asp-for="Surname">Фамилия :</label><br />

@@ -5,80 +5,162 @@ using WebApplicationMustToHave.Models;
 
 namespace WebApplicationMustToHave.Repository
 {
-    public class DbPersonManager
+    public interface IDbPersonManager
     {
-        private readonly AppDbContext _db;
+        /// <summary>
+        /// Возвращает список всех представлений персон
+        /// </summary>
+        /// <returns>список представлений персон</returns>
+        public Task<List<IViewable>> GetPersonViewsAsync();
+
+        /// <summary>
+        /// Возвращает список всех персон
+        /// </summary>
+        /// <returns>список персон</returns>
+        public Task<List<IDbPerson>> GetPersonsAsync();
+
+        /// <summary>
+        /// Возвращает персону по id
+        /// </summary>
+        /// <param name="id">id персоны</param>
+        /// <returns>персона</returns>
+        public Task<IDbPerson?> GetPersonByIdAsync(int id);
+
+        /// <summary>
+        /// Добавляет персону
+        /// </summary>
+        /// <param name="dbPerson"></param>
+        /// <returns></returns>
+        public Task AddPersonAsync(IDbPerson dbPerson);
+
+        /// <summary>
+        /// Обновляет персону
+        /// </summary>
+        /// <param name="dbPerson"></param>
+        /// <returns></returns>
+        public Task UpdatePersonAsync(DbPerson dbPerson);
+
+        /// <summary>
+        /// Удаляет персону
+        /// </summary>
+        /// <param name="dbPerson"></param>
+        /// <returns></returns>
+        public Task DeletePersonAsync(DbPerson dbPerson);
+
+        /// <summary>
+        /// Сохраняет изменения
+        /// </summary>
+        /// <returns></returns>
+        public Task SaveChangesAsync();
+    }
+
+
+    public class DbPersonManager: IDbPersonManager
+    {
+        private readonly IAppDbContext _db;
         
         public DbPersonManager(AppDbContext db)
         {
             _db = db;
         }
 
-        // GET: DbCompositions
-        // Возвращает список всех произведений.
         /// <summary>
-        /// Возвращает список всех произведений
+        /// Возвращает список всех представлений персон
         /// </summary>
-        /// <returns>список</returns>
+        /// <returns>список представлений персон</returns>
         public async Task<List<IViewable>> GetPersonViewsAsync()
         {
-            try
-            {
-                List<IViewable> persons = await _db.persons.Where(c => c != null).Select(c => (c as IViewable)!).ToListAsync();
-                return persons ?? [];
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("!!!Error GetPersonViewsAsync()");
-                throw;
-            }
+             List<IViewable> persons = await _db.Persons.Where(c => c != null).Select(c => (c as IViewable)!).ToListAsync();
+            return persons ?? [];
         }
 
-        public async Task<IEnumerable<IDbPerson<uint, uint?>>> GetPersonsAsync() => await _db.persons.ToListAsync();
+        /// <summary>
+        /// Возвращает список всех персон
+        /// </summary>
+        /// <returns>список персон</returns>
+        public async Task<List<IDbPerson>> GetPersonsAsync()
+        {
+            List<IDbPerson> persons = await _db.Persons.Where(c => c != null).Select(c => (c as IDbPerson)!).ToListAsync();
+            return persons ?? [];
+        }
 
-        public async Task<IDbPerson<uint, uint?>?> GetPersonByIdAsync(int id) => await _db.persons.FirstOrDefaultAsync(p => p.Id == id);
+        /// <summary>
+        /// Возвращает персону по id
+        /// </summary>
+        /// <param name="id">id персоны</param>
+        /// <returns>персона</returns>
+        public async Task<IDbPerson?> GetPersonByIdAsync(int id) => await _db.Persons.FirstOrDefaultAsync(p => p.Id == id);
 
-        public async Task AddPersonAsync(IDbPerson<uint, uint?> dbPerson)
+        /// <summary>
+        /// Добавляет персону
+        /// </summary>
+        /// <param name="dbPerson"></param>
+        /// <returns></returns>
+        public async Task AddPersonAsync(IDbPerson dbPerson)
         {
             if (dbPerson != null)
             {
-                try
+                if (dbPerson.Id == 0)
                 {
-                    if (dbPerson.Id == 0)
-                    {
-                        dbPerson.Id = _db.persons.Select(c => c.Id).Max() + 1;
-                    }
-                    await _db.persons.AddAsync((DbPerson)dbPerson);
+                    dbPerson.Id = _db.Persons.Count() == 0 ? 1 : _db.Persons.Select(c => c.Id).Max() + 1;
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("!!!Error AddPersonAsync()");
-                    throw;
-                }
+                DbPerson persObj = (DbPerson)dbPerson;
+                _db.Persons.Load();
+                await _db.Persons.AddAsync(persObj);
+                //await _db.Persons.AddAsync(dbPerson as DbPerson);
+                await _db.SaveChangesAsync(new CancellationTokenSource().Token);
             }
-            Console.WriteLine("!!!Warning AddPersonAsync() dbPerson = null");
+            else Console.WriteLine("!!!Warning AddPersonAsync() dbPerson = null");
         }
 
+        /// <summary>
+        /// Обновляет персону
+        /// </summary>
+        /// <param name="dbPerson"></param>
+        /// <returns></returns>
         public async Task UpdatePersonAsync(DbPerson dbPerson)
         {
             if (dbPerson != null)
             {
-                _db.persons.Update(dbPerson);
-                await _db.SaveChangesAsync();
+                _db.Persons.Update(dbPerson);
+                await _db.SaveChangesAsync(new CancellationTokenSource().Token);
             }
             Console.WriteLine("!!!Warning UpdatePersonAsync() dbPerson = null");
         }
 
+        /// <summary>
+        /// Удаляет персону
+        /// </summary>
+        /// <param name="dbPerson"></param>
+        /// <returns></returns>
         public async Task DeletePersonAsync(DbPerson dbPerson)
         {
             if (dbPerson != null)
             {
-                _db.persons.Remove(dbPerson);
-                await _db.SaveChangesAsync();
+                _db.Persons.Remove(dbPerson);
+                await _db.SaveChangesAsync(new CancellationTokenSource().Token);
             }
             Console.WriteLine("!!!Warning DeletePersonAsync() dbPerson = null");
         }
 
-        public async Task SaveChangesAsync() => await _db.SaveChangesAsync();
+        /// <summary>
+        /// Сохраняет изменения
+        /// </summary>
+        /// <returns></returns>
+        public async Task SaveChangesAsync() => await _db.SaveChangesAsync(new CancellationTokenSource().Token);
+
+        //public IEnumerable<IPerson> CastToPersonCollection(IEnumerable<IDbPerson> dbPersons)
+        //{
+        //    List<Person> personsList = [];
+        //    foreach (var dbPerson in dbPersons)
+        //    {
+        //        if (dbPerson != null)
+        //        {
+        //            Person? person = (Person?)Person.GetObjFromDb(dbPerson);
+        //            if (person != null) personsList.Add(person);
+        //        }
+        //    }
+        //    return personsList;
+        //}
     }
 }

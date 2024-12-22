@@ -6,14 +6,16 @@ using WebApplicationMustToHave.Repository;
 
 namespace WebApplicationMustToHave.Controllers
 {
-    public class PersonController(AppDbContext db) : Controller
+    [Route("Person")]
+    public class PersonController(IAppDbContext db, IDbPersonManager pm) : Controller
     {
-        private readonly AppDbContext _db = db;
-
-        // GET: PersonController
-        public ActionResult Items()
+        [Route("Items")]
+        public async Task<IActionResult> Items()
         {
-            return View();
+            List<IViewable> views = await pm?.GetPersonViewsAsync()!;
+            Console.WriteLine("AppController Items().Count = " + views?.Count);
+            return View(views);
+            //return View();
         }
 
         //// GET: PersonController/Details/5
@@ -22,7 +24,8 @@ namespace WebApplicationMustToHave.Controllers
         //    return View();
         //}
 
-        // GET: PersonController/Create
+        [HttpGet]
+        [Route("Create")]
         public ActionResult Create()
         {
             return View("Edit");
@@ -30,28 +33,22 @@ namespace WebApplicationMustToHave.Controllers
 
         // POST: PersonController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        [Route("Create")]
         //public ActionResult Create(IFormCollection collection)
-        public ActionResult Create(Person? person)
+        public async Task<ActionResult> Create(Person? person)
         {
-            try
-            {
-                if (ModelState.IsValid && person != null)
-                { 
-                    Console.WriteLine("Create" + ControllerContext.HttpContext.Request.Path + " - " + person?.Id + " : " + person?.Name + " : " + person?.YearBirth);
-                    Task taskAdd = new DbPersonManager(_db).AddPersonAsync((IDbPerson<uint, uint?>)person);
-                    //return RedirectToAction(nameof(Index));
-                    return RedirectToAction("Items");
-                }
-                return View();
+            if (ModelState.IsValid && person != null)
+            { 
+                Console.WriteLine("Create" + ControllerContext.HttpContext.Request.Path + " - " + person?.Id + " : " + person?.Name + " : " + person?.YearBirth);
+                await pm.AddPersonAsync((IDbPerson)person);
+                //return RedirectToAction(nameof(Index));
+                return RedirectToAction("Items");
             }
-            catch
-            {
-                return View();
-            }
+            return View();
         }
 
-        // GET: PersonController/Edit/5
+        [HttpGet]
+        [Route("Edit/{id?}")]
         public ActionResult Edit(int id)
         {
             return View();
@@ -59,7 +56,7 @@ namespace WebApplicationMustToHave.Controllers
 
         // POST: PersonController/Edit/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        [Route("Edit/{person?}")]
         //public ActionResult Edit(int id, IFormCollection collection)
         public ActionResult Edit(Person? person)
         {
@@ -68,43 +65,22 @@ namespace WebApplicationMustToHave.Controllers
                 if (person.Id == 0)
                 {
                     Console.WriteLine("Create" + ControllerContext.HttpContext.Request.Path + " - " + person?.Id + " : " + person?.Name + " : " + person?.YearBirth);
-                    Task taskAdd = new DbPersonManager(_db).AddPersonAsync((IDbPerson<uint, uint?>)person);
+                    Task taskAdd = pm.AddPersonAsync(Person.CastToObjDb(person)!);
                     //return RedirectToAction(nameof(Index));
                     return RedirectToAction("Items");
                 }
 
-                try
-                {
-                    Console.WriteLine("Edit" + ControllerContext.HttpContext.Request.Path + " - " + person.Id);
-                    return RedirectToAction(nameof(Index));
-                }
-                catch
-                {
-                    return View();
-                }
+                Console.WriteLine("Edit" + ControllerContext.HttpContext.Request.Path + " - " + person.Id);
+                return RedirectToAction(nameof(Index));
             }
             return NotFound();
         }
 
-        // GET: PersonController/Delete/5
+        [HttpGet]
+        [Route("Delete/id")]
         public ActionResult Delete(int id)
         {
             return View();
-        }
-
-        // POST: PersonController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
         }
     }
 }

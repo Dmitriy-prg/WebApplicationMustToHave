@@ -95,21 +95,5 @@ namespace WebApplicationMustToHave.Models
         //    f.Resolution = (IResolution<uint>?)(dbComposition?.Resolution);
         //    return f;
         //}
-
-        public static async Task<IEnumerable<IFilm<uint, uint, IMeasureUnit>>> GetCollectionsAsync(AppDbContext db)
-        {
-            DbCompositionManager dbMan = new DbCompositionManager(db);
-            List<IDbComposition> dbCompositions = await dbMan.GetCompositionsByTypeAsync(3);
-            List<Film> filmsList = [];
-            foreach (var dbComposition in dbCompositions)
-            {
-                if (dbComposition != null)
-                {
-                    Film? film = (Film?)Film.GetObjFromDb(dbComposition);
-                    if (film != null) filmsList.Add(film);
-                }
-            }
-            return filmsList;
-        }
     }
 }

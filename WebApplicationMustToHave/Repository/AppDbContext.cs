@@ -5,22 +5,43 @@ using WebApplicationMustToHave.DataModels;
 
 namespace WebApplicationMustToHave.Repository
 {
-    public class AppDbContext: DbContext
+    public interface IAppDbContext
     {
-        public DbSet<DbCompositionType> composition_types { get; set; } = null!;
-        public DbSet<DbGenreType> genre_types { get; set; } = null!;
-        public DbSet<DbBookBinder> book_binders { get; set; } = null!;
-        public DbSet<DbGenre> genres { get; set; } = null!;
-        public DbSet<DbMeasureUnit> measure_units { get; set; } = null!;
-        public DbSet<DbBitrate> bitrates { get; set; } = null!;
-        public DbSet<DbVolume> volumes { get; set; } = null!;
-        public DbSet<DbRatingVersion> rating_versions { get; set; } = null!;
-        public DbSet<DbRating> ratings { get; set; } = null!;        
-        public DbSet<DbResolution> resolutions { get; set; } = null!;
-        public DbSet<DbPublishing> publishers { get; set; } = null!;
-        public DbSet<DbPublishing> compositions_persons_links { get; set; } = null!;
-        public DbSet<DbComposition> compositions { get; set; } = null!;
-        public DbSet<DbPerson> persons { get; set; } = null!;
+        public DbSet<DbCompositionType> CompositionTypes { get; set; }
+        public DbSet<DbGenreType> GenreTypes { get; set; }
+        public DbSet<DbBookBinder> BookBinders { get; set; }
+        public DbSet<DbGenre> Genres { get; set; }
+        public DbSet<DbMeasureUnit> MeasureUnits { get; set; }
+        public DbSet<DbBitrate> Bitrates { get; set; }
+        public DbSet<DbVolume> Volumes { get; set; }
+        public DbSet<DbRatingVersion> RatingVersions { get; set; }
+        public DbSet<DbRating> Ratings { get; set; }
+        public DbSet<DbResolution> Resolutions { get; set; }
+        public DbSet<DbPublishing> Publishers { get; set; }
+        public DbSet<DbPublishing> CompositionsPersonsLinks { get; set; }
+        public DbSet<DbComposition> Compositions { get; set; }
+        public DbSet<DbPerson> Persons { get; set; }
+
+        public Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+    }
+
+
+        public class AppDbContext: DbContext, IAppDbContext
+    {
+        public DbSet<DbCompositionType> CompositionTypes { get; set; } = null!;
+        public DbSet<DbGenreType> GenreTypes { get; set; } = null!;
+        public DbSet<DbBookBinder> BookBinders { get; set; } = null!;
+        public DbSet<DbGenre> Genres { get; set; } = null!;
+        public DbSet<DbMeasureUnit> MeasureUnits { get; set; } = null!;
+        public DbSet<DbBitrate> Bitrates { get; set; } = null!;
+        public DbSet<DbVolume> Volumes { get; set; } = null!;
+        public DbSet<DbRatingVersion> RatingVersions { get; set; } = null!;
+        public DbSet<DbRating> Ratings { get; set; } = null!;        
+        public DbSet<DbResolution> Resolutions { get; set; } = null!;
+        public DbSet<DbPublishing> Publishers { get; set; } = null!;
+        public DbSet<DbPublishing> CompositionsPersonsLinks { get; set; } = null!;
+        public DbSet<DbComposition> Compositions { get; set; } = null!;
+        public DbSet<DbPerson> Persons { get; set; } = null!;
 
         public AppDbContext() : base()
         {
@@ -28,6 +49,12 @@ namespace WebApplicationMustToHave.Repository
             //Database.EnsureCreated();
             ///*Add-Migration*/ InitialCreate   //Update-Database  //Remove-Migration
         }
+
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken)
+        {
+            return await base.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             var config = new ConfigurationBuilder()
@@ -42,68 +69,19 @@ namespace WebApplicationMustToHave.Repository
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<DbCompositionType>().ToTable("composition_types");
-            
-            modelBuilder.Entity<DbBookBinder>().ToTable("book_binders");
-            
-            modelBuilder.Entity<DbGenreType>().ToTable("genre_types");
-
-            modelBuilder.Entity<DbGenre>().ToTable("genres");
-            modelBuilder.Entity<DbGenreType>().HasOne<DbGenre>().WithOne(g => g.GenreType).HasForeignKey<DbGenre>(g => g.DbGenreTypeId);
-
-            modelBuilder.Entity<DbMeasureUnit>().ToTable("measure_units");
-
-            modelBuilder.Entity<DbBitrate>().ToTable("bitrates");
-            modelBuilder.Entity<DbMeasureUnit>().HasOne<DbBitrate>().WithOne(b => b.Unit).HasForeignKey<DbBitrate>(b => b.DbMeasureUnitId);
-
-            modelBuilder.Entity<DbVolume>().ToTable("volumes");
-            modelBuilder.Entity<DbMeasureUnit>().HasOne<DbVolume>().WithOne(b => b.Unit).HasForeignKey<DbVolume>(b => b.DbMeasureUnitId);
-
-            modelBuilder.Entity<DbRatingVersion>().ToTable("rating_versions");
-
-            modelBuilder.Entity<DbRating>().ToTable("ratings");
-            modelBuilder.Entity<DbRatingVersion>().HasOne<DbRating>().WithOne(b => b.Version).HasForeignKey<DbRating>(b => b.DbRatingVersionId);
-
-            modelBuilder.Entity<DbResolution>().ToTable("resolutions");
-
-            modelBuilder.Entity<DbPublishing>().ToTable("publishers");            
-
-            modelBuilder.Entity<DbComposition>().ToTable("compositions");
-            modelBuilder.Entity<DbCompositionType>().HasOne<DbComposition>().WithOne(c => c.Type).HasForeignKey<DbComposition>(c=>c.DbCompositionTypeId);
-            modelBuilder.Entity<DbBookBinder>().HasOne<DbComposition>().WithOne(c => c.Binder).HasForeignKey<DbComposition>(c => c.DbCompositionTypeId);
-            modelBuilder.Entity<DbVolume>().HasOne<DbComposition>().WithOne(c => c.Volume).HasForeignKey<DbComposition>(c => c.DbVolumeId);
-            modelBuilder.Entity<DbPublishing>().HasOne<DbComposition>().WithOne(c => c.Publishing).HasForeignKey<DbComposition>(c => c.DbPublishingId);
-            modelBuilder.Entity<DbBitrate>().HasOne<DbComposition>().WithOne(c => c.BitrateVideo).HasForeignKey<DbComposition>(c => c.DbBitrate_BitrateVideoId);
-            modelBuilder.Entity<DbBitrate>().HasOne<DbComposition>().WithOne(c => c.BitrateAudio).HasForeignKey<DbComposition>(c => c.DbBitrate_BitrateAudioId);
-            modelBuilder.Entity<DbResolution>().HasOne<DbComposition>().WithOne(c => c.Resolution).HasForeignKey<DbComposition>(c => c.DbResolutionId);
-            
-            modelBuilder.Entity<DbPerson>().ToTable("persons");
-            modelBuilder.Entity<DbComposition>().HasMany(с => с.Authors).WithMany(p => p.DbComposition_Authors).UsingEntity("DbComposition_Authors_DbPerson");
-            modelBuilder.Entity<DbComposition>().HasMany(с => с.Composers).WithMany(p => p.DbComposition_Composers).UsingEntity("DbComposition_Composers_DbPerson");
-            modelBuilder.Entity<DbComposition>().HasMany(с => с.Directors).WithMany(p => p.DbComposition_Directors).UsingEntity("DbComposition_Directors_DbPerson");
-            modelBuilder.Entity<DbComposition>().HasMany(с => с.Performers).WithMany(p => p.DbComposition_Performers).UsingEntity("DbComposition_Performers_DbPerson");
-
-            //modelBuilder.Entity<DbCompositionDbPersonLink>().ToTable("compositions_persons_links");
-            //modelBuilder.Entity<DbComposition>().HasMany(c => c.Authors).WithMany().UsingEntity<DbCompositionDbPersonLink>(
-            //    c => c.HasOne(typeof(DbComposition)).WithMany().HasForeignKey(nameof(DbCompositionDbPersonLink.AuthorId)).HasPrincipalKey(nameof(DbComposition.Id)),
-            //    p => p.HasOne(typeof(DbPerson)).WithMany().HasForeignKey(nameof(DbCompositionDbPersonLink.CompositionId)).HasPrincipalKey(nameof(DbPerson.Id)),
-            //    cp => cp.HasKey(nameof(DbCompositionDbPersonLink.AuthorId), nameof(DbCompositionDbPersonLink.CompositionId)));
-            //modelBuilder.Entity<DbComposition>().HasMany(c => c.Authors).WithMany().UsingEntity<DbCompositionDbPersonLink>(
-            //    cp => cp.HasOne<DbComposition>().WithMany().HasForeignKey(c => c.AuthorId));
-            //modelBuilder.Entity<DbPerson>().HasMany<DbComposition>().WithMany(c => c.Authors).UsingEntity<DbCompositionDbPersonLink>(
-            //    cp => cp.HasOne<DbPerson>().WithMany().HasForeignKey(c => c.CompositionId));
-            //modelBuilder.Entity<DbComposition>().HasMany(c => c.Composers).WithMany().UsingEntity<DbCompositionDbPersonLink>(
-            //    cp => cp.HasOne<DbComposition>().WithMany().HasForeignKey(c => c.ComposerId));
-            //modelBuilder.Entity<DbPerson>().HasMany<DbComposition>().WithMany(c => c.Composers).UsingEntity<DbCompositionDbPersonLink>(
-            //    cp => cp.HasOne<DbPerson>().WithMany().HasForeignKey(c => c.CompositionId));
-            //modelBuilder.Entity<DbComposition>().HasMany(c => c.Directors).WithMany().UsingEntity<DbCompositionDbPersonLink>(
-            //    cp => cp.HasOne<DbComposition>().WithMany().HasForeignKey(c => c.DirectorId));
-            //modelBuilder.Entity<DbPerson>().HasMany<DbComposition>().WithMany(c => c.Directors).UsingEntity<DbCompositionDbPersonLink>(
-            //    cp => cp.HasOne<DbPerson>().WithMany().HasForeignKey(c => c.CompositionId));
-            //modelBuilder.Entity<DbComposition>().HasMany(c => c.Performers).WithMany().UsingEntity<DbCompositionDbPersonLink>(
-            //    cp => cp.HasOne<DbComposition>().WithMany().HasForeignKey(c => c.PerformerId));
-            //modelBuilder.Entity<DbPerson>().HasMany<DbComposition>().WithMany(c => c.Performers).UsingEntity<DbCompositionDbPersonLink>(
-            //    cp => cp.HasOne<DbPerson>().WithMany().HasForeignKey(c => c.CompositionId));
+            modelBuilder.ApplyConfiguration(new DbCompositionTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new DbBookBinderConfiguration());
+            modelBuilder.ApplyConfiguration(new DbGenreTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new DbGenreConfiguration());
+            modelBuilder.ApplyConfiguration(new DbMeasureUnitConfiguration());
+            modelBuilder.ApplyConfiguration(new DbBitrateConfiguration());
+            modelBuilder.ApplyConfiguration(new DbVolumeConfiguration());
+            modelBuilder.ApplyConfiguration(new DbRatingVersionConfiguration());
+            modelBuilder.ApplyConfiguration(new DbRatingConfiguration());
+            modelBuilder.ApplyConfiguration(new DbResolutionConfiguration());
+            modelBuilder.ApplyConfiguration(new DbPublishingConfiguration());
+            modelBuilder.ApplyConfiguration(new DbCompositionConfiguration());
+            modelBuilder.ApplyConfiguration(new DbPersonConfiguration());
 
             modelBuilder.Entity<DbGenreType>().HasData(
                 new DbGenreType { Id = 1, Name = "Музыкальный" },

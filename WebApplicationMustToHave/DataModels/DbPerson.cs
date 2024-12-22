@@ -1,14 +1,16 @@
-﻿namespace WebApplicationMustToHave.DataModels
+﻿using WebApplicationMustToHave.Models;
+
+namespace WebApplicationMustToHave.DataModels
 {
     /// <summary>
     /// Представляет интерфейс человека с идентификатором, именем, фамилией и необязательными полями для указания отчества и года рождения.
     /// </summary>
-    public interface IDbPerson<T,V>
+    public interface IDbPerson
     {
         /// <summary>
         /// Уникальный идентификатор человека.
         /// </summary>
-        T Id { get; set; }
+        uint Id { get; set; }
 
         /// <summary>
         /// Имя человека.
@@ -28,14 +30,14 @@
         /// <summary>
         /// Год рождения человека (необязательно).
         /// </summary>
-        V? YearBirth { get; set; }
+        uint? YearBirth { get; set; }
     }
 
     /// <summary>
     /// Представляет объект человека с идентификатором, именем, фамилией и необязательными полями для указания отчества и года рождения.
     ///  Реализует интерфейс IDbPerson.
     /// </summary>
-    public class DbPerson : IDbPerson<uint, uint?>
+    public class DbPerson : IDbPerson, IViewable
     {
         /// <summary>
         /// Уникальный идентификатор человека.
@@ -80,5 +82,10 @@
         /// Навигационное свойство.
         /// </summary>
         public List<DbComposition>? DbComposition_Directors { get; set; }
+
+        /// <summary>
+        /// Получает строку-представление человека.
+        /// </summary>
+        public string View { get => Name + " " + Surname + " " + Patronymic ?? "" + " " + YearBirth + " г." ?? ""; }
     }
 }

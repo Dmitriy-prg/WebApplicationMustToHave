@@ -4,7 +4,63 @@ using WebApplicationMustToHave.Models;
 
 namespace WebApplicationMustToHave.Repository
 {
-    public class DbCompositionManager
+    public interface IDbCompositionManager
+    {
+        // Возвращает список всех произведений.
+        /// <summary>
+        /// Возвращает список всех произведений
+        /// </summary>
+        /// <returns>список</returns>
+        public Task<List<IViewable>> GetCompositionViewsAsync();
+
+        /// <summary>
+        /// Возвращает список всех произведений отфильтрованный по типу
+        /// "Книга" = 1, "Аудиокнига" = 2, "Фильм" = 3, "Песня" = 4
+        /// </summary>
+        /// <param name="typeId"> Книга = 1, Аудиокнига = 2, Фильм = 3, Песня = 4</param>
+        /// <returns>список представлений произведений</returns>
+        public Task<List<IViewable>> GetCompositionViewsByTypeAsync(int typeId);
+
+        /// <summary>
+        /// Возвращает список всех произведений
+        /// </summary>
+        /// <returns>список всех произведений</returns>
+        public Task<List<IDbComposition>> GetCompositionsAsync();
+
+        /// <summary>
+        /// Возвращает список всех произведений отфильтрованный по типу
+        /// </summary>
+        /// <param name="typeId"> Книга = 1, Аудиокнига = 2, Фильм = 3, Песня = 4</param>
+        /// <returns>список</returns>
+        public Task<List<IDbComposition>> GetCompositionsByTypeAsync(int typeId);
+
+        /// <summary>
+        /// Возвращает произведение по id.
+        /// </summary>
+        /// <param name="id">Ключ произведения</param>
+        /// <returns>произведение</returns>
+        public Task<IDbComposition?> GetCompositionByIdAsync(int id);
+
+        /// <summary>
+        /// Обновляет произведение.
+        /// </summary>
+        public Task UpdateCompositionAsync(IDbComposition dbComposition);
+
+        /// <summary>
+        /// Удаляет произведение.
+        /// </summary>
+        public Task DeleteCompositionByIdAsync(int id);
+
+        /// <summary>
+        /// Добавляет произведение.
+        /// </summary>
+        public Task AddCompositionAsync(IDbComposition dbComposition);
+
+        public Task<DbCompositionType?> GetCompositionTypeById(uint typeId);
+    }
+
+
+    public class DbCompositionManager: IDbCompositionManager
     {
         private readonly AppDbContext _db;
         
@@ -21,16 +77,9 @@ namespace WebApplicationMustToHave.Repository
         /// <returns>список</returns>
         public async Task<List<IViewable>> GetCompositionViewsAsync()
         {
-            try
-            {
-                List<IViewable> compositions = await _db.compositions.Where(c => c != null).Select(c => (c as IViewable)!).ToListAsync();
-                return compositions ?? [];
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("!!!Error GetCompositionsAsync()");
-                throw;
-            }
+            if (_db.CompositionTypes == null | _db.CompositionTypes.Local.Count == 0) _db.CompositionTypes?.Load();
+            List<IViewable> compositions = await _db.Compositions.Where(c => c != null).Select(c => (c as IViewable)!).ToListAsync();
+            return compositions ?? [];
         }
 
         // GET: DbCompositions
@@ -42,15 +91,7 @@ namespace WebApplicationMustToHave.Repository
         /// <returns>список представлений произведений</returns>
         public async Task<List<IViewable>> GetCompositionViewsByTypeAsync(int typeId)
         {
-            try
-            {
-                return await _db.compositions.Where(c => c != null && c.Type != null && c.Type.Id == typeId).Select(c => (c as IViewable)!).ToListAsync() ?? [];
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("!!!Error GetCompositionsAsync()");
-                throw;
-            }
+            return await _db.Compositions.Where(c => c != null && c.Type != null && c.Type.Id == typeId).Select(c => (c as IViewable)!).ToListAsync() ?? [];
         }
 
         // GET: DbCompositions
@@ -61,15 +102,7 @@ namespace WebApplicationMustToHave.Repository
         /// <returns>список всех произведений</returns>
         public async Task<List<IDbComposition>> GetCompositionsAsync()
         {
-            try
-            {
-                return await _db.compositions.Select(c => c as IDbComposition).ToListAsync() ?? [];
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("!!!Error GetCompositionsAsync()");
-                throw;
-            }
+            return await _db.Compositions.Select(c => c as IDbComposition).ToListAsync() ?? [];
         }
 
         // GET: DbCompositions
@@ -81,15 +114,7 @@ namespace WebApplicationMustToHave.Repository
         /// <returns>список</returns>
         public async Task<List<IDbComposition>> GetCompositionsByTypeAsync(int typeId)
         {
-            try
-            {
-                return await _db.compositions.Where(c => c.Type != null && c.Type.Id == typeId).Select(c => c as IDbComposition).ToListAsync() ?? [];
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("!!!Error GetCompositionsByTypeAsync()");
-                throw;
-            }
+            return await _db.Compositions.Where(c => c.Type != null && c.Type.Id == typeId).Select(c => c as IDbComposition).ToListAsync() ?? [];
         }
 
         /// <summary>
@@ -99,18 +124,10 @@ namespace WebApplicationMustToHave.Repository
         /// <returns>произведение</returns>
         public async Task<IDbComposition?> GetCompositionByIdAsync(int id)
         {
-            try
-            {
-                IDbComposition dbComposition = await _db.compositions.Where(c => c.Type != null && c.Id == id).Select(c => c as IDbComposition).FirstOrDefaultAsync();
-                if (dbComposition == null) return null;
-                if (dbComposition.Type == null) dbComposition.Type = await GetCompositionTypeById(dbComposition.DbCompositionTypeId);
-                return dbComposition;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("!!!Error GetCompositionsByTypeAsync()");
-                throw;
-            }
+            IDbComposition dbComposition = await _db.Compositions.Where(c => c.Type != null && c.Id == id).Select(c => c as IDbComposition).FirstOrDefaultAsync();
+            if (dbComposition == null) return null;
+            if (dbComposition.Type == null) dbComposition.Type = await GetCompositionTypeById(dbComposition.DbCompositionTypeId);
+            return dbComposition;
         }
 
         /// <summary>
@@ -120,17 +137,10 @@ namespace WebApplicationMustToHave.Repository
         {
             if (dbComposition != null)
             {
-                try
-                {
-                    _db.compositions.Update((dbComposition as DbComposition)!);
-                    await _db.SaveChangesAsync();
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("!!!Error UpdateCompositionAsync()");
-                    throw;
-                }
+                _db.Compositions.Update((dbComposition as DbComposition)!);
+                await _db.SaveChangesAsync(new CancellationTokenSource().Token);
             }
+            else Console.WriteLine("!!!Warning UpdateCompositionAsync() dbComposition = null");
         }
 
         /// <summary>
@@ -138,20 +148,13 @@ namespace WebApplicationMustToHave.Repository
         /// </summary>
         public async Task DeleteCompositionByIdAsync(int id)
         {
-            try
+            DbComposition? dbComposition = _db.Compositions.FirstOrDefault(c => c.Id == id);
+            if (dbComposition != null)
             {
-                DbComposition? composition = _db.compositions.FirstOrDefault(c => c.Id == id);
-                if (composition != null)
-                {
-                    _db.compositions.Remove(composition);
-                    await _db.SaveChangesAsync();
-                }
+                _db.Compositions.Remove(dbComposition);
+                await _db.SaveChangesAsync(new CancellationTokenSource().Token);
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine("!!!Error DeleteCompositionByIdAsync()");
-                throw;
-            }
+            else Console.WriteLine("!!!Warning DeleteCompositionByIdAsync() dbComposition = null");
         }
 
         /// <summary>
@@ -161,36 +164,35 @@ namespace WebApplicationMustToHave.Repository
         {
             if (dbComposition != null)
             {
-                try
+                if (dbComposition.Id == 0)
                 {
-                    if (dbComposition.Id == 0)
-                    {
-                        dbComposition.Id = _db.compositions.Select(c => c.Id).Max()+1;
-                    }
-                    _db.compositions.Add((dbComposition as DbComposition)!);
-                    await _db.SaveChangesAsync();
+                    dbComposition.Id = _db.Compositions.Select(c => c.Id).Max()+1;
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("!!!Error AddCompositionAsync()");
-                    throw;
-                }
+                _db.Compositions.Add((dbComposition as DbComposition)!);
+                await _db.SaveChangesAsync(new CancellationTokenSource().Token);
             }
-            Console.WriteLine("!!!Warning AddCompositionAsync() dbComposition = null");
+            else Console.WriteLine("!!!Warning AddCompositionAsync() dbComposition = null");
         }
 
         public async Task<DbCompositionType?> GetCompositionTypeById(uint typeId)
         {
-            try
-            {
-                return await _db.composition_types.FirstOrDefaultAsync(c => c.Id == typeId);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("!!!Error GetCompositionTypeById()");
-                throw;
-            }
+            return await _db.CompositionTypes.FirstOrDefaultAsync(c => c.Id == typeId);
         }
 
+        //public static async Task<IEnumerable<IFilm<uint, uint, IMeasureUnit>>> GetCollectionsAsync(AppDbContext db)
+        //{
+        //    DbCompositionManager dbMan = new DbCompositionManager(db);
+        //    List<IDbComposition> dbCompositions = await dbMan.GetCompositionsByTypeAsync(3);
+        //    List<Film> filmsList = [];
+        //    foreach (var dbComposition in dbCompositions)
+        //    {
+        //        if (dbComposition != null)
+        //        {
+        //            Film? film = (Film?)Film.GetObjFromDb(dbComposition);
+        //            if (film != null) filmsList.Add(film);
+        //        }
+        //    }
+        //    return filmsList;
+        //}
     }
 }

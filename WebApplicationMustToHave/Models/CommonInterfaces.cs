@@ -31,8 +31,8 @@ namespace WebApplicationMustToHave.Models
 
     public interface IDbLinkable<T> where T : IEntity
     {
-        public static T GetObjFromDb(T val) => val;
+        public static T? GetObjFromDb(T? val) => val;
 
-        public static Task<IEnumerable<T>> GetCollectionsAsync(AppDbContext db) => Task.FromResult<IEnumerable<T>>(new List<T>());
+        public static T? CastToObjDb(T? val) => val;
     }
 }

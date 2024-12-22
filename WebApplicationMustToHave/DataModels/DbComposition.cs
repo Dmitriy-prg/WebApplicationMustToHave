@@ -137,7 +137,7 @@ namespace WebApplicationMustToHave.DataModels
     /// <summary>
     /// Базовый класс, представляющий произведение. Реализует интерфейс IDbComposition.
     /// </summary>
-    public class DbComposition : IEntity, IDbComposition
+    public class DbComposition : IEntity, IDbComposition, IViewable
     {
         /// <summary>
         /// Возвращает или задает уникальный идентификатор произведения.
@@ -264,6 +264,9 @@ namespace WebApplicationMustToHave.DataModels
         /// </summary>
         public uint? DbResolutionId { get; set; }
 
-        
+        /// <summary>
+        /// Получает строку-представление.
+        /// </summary>
+        public string View { get => Type?.Name + " " + Name + " " + YearBirth ?? ""; }
     }
 }

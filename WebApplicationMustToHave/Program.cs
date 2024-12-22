@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
-using Microsoft.IdentityModel.Tokens;
+//using Microsoft.IdentityModel.Tokens;
 using System.Reflection.Emit;
 using WebApplicationMustToHave.DataModels;
 using WebApplicationMustToHave.Repository;
@@ -10,17 +10,35 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+//требуется только для минимальных API
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 // добавляем контекст AppDbContext в качестве сервиса в приложение
-builder.Services.AddDbContext<AppDbContext>();
+builder.Services.AddDbContext<IAppDbContext, AppDbContext>();
+// добавляем DbCompositionManager в качестве сервиса в приложение
+builder.Services.AddTransient<IDbCompositionManager, DbCompositionManager>();
+// добавляем DbPersonManager в качестве сервиса в приложение
+builder.Services.AddTransient<IDbPersonManager, DbPersonManager>();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
+    app.UseSwagger();
+    app.UseSwaggerUI(options => // UseSwaggerUI is called only in Development.
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+        options.RoutePrefix = string.Empty;
+    });
+
     app.UseExceptionHandler("/Home/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
+}
+else
+{
+    app.UseDeveloperExceptionPage();
 }
 
 app.UseHttpsRedirection();
@@ -32,24 +50,24 @@ app.UseAuthorization();
 
 //app.MapDefaultControllerRoute();
 
-app.MapControllerRoute(
-    name: "items",
-    //pattern: "{controller=Home}/{action=Index}/{id?}");
-    pattern: "{controller=App}/{action=Items}");
-app.MapControllerRoute(
-    name: "film",
-    //pattern: "{controller=Home}/{action=Index}/{id?}");
-    pattern: "{controller=App}/{action=Film}/{id?}");
-app.MapControllerRoute(
-    name: "CreateFilm",
-    //pattern: "{controller=Home}/{action=Index}/{id?}");
-    pattern: "{controller=App}/{action=CreateFilm}");
-app.MapControllerRoute(
-    name: "persys",
-    pattern: "{controller=Person}/{action=Items}");
-app.MapControllerRoute(
-    name: "pers",
-    pattern: "{controller=Person}/{action=Create}/{id?}");
+//app.MapControllerRoute(
+//    name: "items",
+//    //pattern: "{controller=Home}/{action=Index}/{id?}");
+//    pattern: "{controller=App}/{action=Items}");
+//app.MapControllerRoute(
+//    name: "film",
+//    //pattern: "{controller=Home}/{action=Index}/{id?}");
+//    pattern: "{controller=App}/{action=Film}/{id?}");
+//app.MapControllerRoute(
+//    name: "CreateFilm",
+//    //pattern: "{controller=Home}/{action=Index}/{id?}");
+//    pattern: "{controller=App}/{action=CreateFilm}");
+//app.MapControllerRoute(
+//    name: "persys",
+//    pattern: "{controller=Person}/{action=Items}");
+//app.MapControllerRoute(
+//    name: "pers",
+//    pattern: "{controller=Person}/{action=Create}/{id?}");
 
 //app.MapGet("/app/Items", async (AppDbContext db) =>
 //{
