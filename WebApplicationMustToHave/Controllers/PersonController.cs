@@ -9,6 +9,7 @@ namespace WebApplicationMustToHave.Controllers
     [Route("Person")]
     public class PersonController(IAppDbContext db, IDbPersonManager pm) : Controller
     {
+        [HttpGet]
         [Route("Items")]
         public async Task<IActionResult> Items()
         {
