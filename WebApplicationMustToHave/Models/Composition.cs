@@ -123,7 +123,7 @@ namespace WebApplicationMustToHave.Models
 
         public static async Task<IEnumerable<IComposition<int, uint?, string, double>>> GetCollectionsAsync(AppDbContext db)
         {
-            List<IDbComposition> dbCompositions = await new DbCompositionManager(db).GetCompositionsAsync();
+            List<IDbComposition> dbCompositions = await new DbCompositionManager(db).GetCompositionsAsync(new CancellationTokenSource().Token);
             List<Composition> CompositionsList = [];
             foreach (var dbComposition in dbCompositions)
             {
