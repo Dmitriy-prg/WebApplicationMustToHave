@@ -1,0 +1,55 @@
+﻿@using WebApplicationMustToHave.Models;
+@model IComposition<int, uint?, string, double>
+
+@{
+    ViewData["Title"] = "Фильм";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>ФИЛЬМ</title>
+    <style>
+        td {
+            padding: 5px;
+        }
+
+        button {
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h2>фильм</h2>
+    <div>
+        <input type="hidden" id="Id"/>
+        <p>
+            <button id="saveBtn">Сохранить</button>
+            <button id="returnBtn">Вернуться к списку</button>
+        </p>
+    </div>    
+    <p>
+        Название:<br />
+        <input id="Name" />
+    </p>
+    <p>
+        Год выхода:<br />
+        <input id="YearBirth" type="number" />
+    </p>
+    <form asp-action="Film" asp-controller="App" asp-route-id="@Model.Id">
+        <p>
+            <label asp-for="Name">Имя</label><br />
+            <input type="text" asp-for="Name" />
+        </p>
+        <p>
+            <label asp-for="YearBirth">Год выхода</label><br />
+            <input type="number" asp-for="YearBirth" />
+        </p>
+        <p>
+            <input type="submit" value="Сохранить" />
+        </p>
+    </form>
+</body>
+</html>
+

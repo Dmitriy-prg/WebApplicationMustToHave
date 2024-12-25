@@ -1,0 +1,183 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Что интересного</title>
+    <style>
+        td {
+            padding: 5px;
+        }
+
+        button {
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Список произведений</h2>
+    <div>
+        <input type="hidden" id="compositionId" />
+        <p>
+            Описание:<br />
+            <input id="view" />
+        </p>
+        <p>
+            <button id="saveBtn">Сохранить</button>
+            <button id="resetBtn">Сбросить</button>
+        </p>
+    </div>
+    <table>
+        <thead><tr><th>Описание</th><th></th></tr></thead>
+        <tbody>
+        </tbody>
+    </table>
+
+    <script>
+    // Получение всех произведений
+        async function getCompositions() {
+            console.log("JS getCompositions BEGIN");
+            // отправляет запрос и получаем ответ
+            const response = await fetch("/api/items", {
+                method: "GET",
+                headers: { "Accept": "application/json" }
+            });
+            // если запрос прошел нормально
+            if (response.ok === true) {
+                console.log("JS getCompositions response.ok");
+                // получаем данные
+                const compositions = await response.json();
+                const rows = document.querySelector("tbody");
+                // добавляем полученные элементы в таблицу
+                compositions.forEach(composition => rows.append(row(composition)));
+            }
+            console.log("JS getCompositions END");
+        }
+        // Получение одного произведения
+        async function getComposition(id) {
+            const response = await fetch(`/api/items/${id}`, {
+                method: "GET",
+                headers: { "Accept": "application/json" }
+            });
+            if (response.ok === true) {
+                const composition = await response.json();
+                document.getElementById("compositionId").value = composition.Id;
+                document.getElementById("compositionName").value = composition.Name;
+                document.getElementById("compositionDescription").value = composition.Description;
+            }
+            else {
+                // если произошла ошибка, получаем сообщение об ошибке
+                const error = await response.json();
+                console.log(error.message); // и выводим его на консоль
+            }
+        }
+        //// добавление пользователя
+        //async function createuser(username, userage) {
+
+        //    const response = await fetch("api/users", {
+        //        method: "post",
+        //        headers: { "accept": "application/json", "content-type": "application/json" },
+        //        body: json.stringify({
+        //            name: username,
+        //            age: parseint(userage, 10)
+        //        })
+        //    });
+        //    if (response.ok === true) {
+        //        const user = await response.json();
+        //        document.queryselector("tbody").append(row(user));
+        //    }
+        //    else {
+        //        const error = await response.json();
+        //        console.log(error.message);
+        //    }
+        //}
+        //// Изменение произведения
+        //async function editComposition(compositionId, compositionName, compositionDescription) {
+        //    const response = await fetch("api/compositions", {
+        //        method: "PUT",
+        //        headers: { "Accept": "application/json", "Content-Type": "application/json" },
+        //        body: JSON.stringify({
+        //            id: compositionId,
+        //            name: compositionName,
+        //            description: compositionDescription
+        //        })
+        //    });
+        //    if (response.ok === true) {
+        //        const composition = await response.json();
+        //        document.querySelector(`tr[data-rowid='${composition.id}']`).replaceWith(row(composition));
+        //    }
+        //    else {
+        //        const error = await response.json();
+        //        console.log(error.message);
+        //    }
+        //}
+        //// Удаление произведения
+        //async function deleteComposition(id) {
+        //    const response = await fetch(`/api/users/${id}`, {
+        //        method: "DELETE",
+        //        headers: { "Accept": "application/json" }
+        //    });
+        //    if (response.ok === true) {
+        //        const composition = await response.json();
+        //        document.querySelector(`tr[data-rowid='${composition.id}']`).remove();
+        //    }
+        //    else {
+        //        const error = await response.json();
+        //        console.log(error.message);
+        //    }
+        //}
+
+        // сброс данных формы после отправки
+        function reset() {
+            document.getElementById("compositionId").value =
+                document.getElementById("view").value = ;
+            //    document.getElementById("compositionName").value =
+            //document.getElementById("compositionDescription").value = ;
+        }
+        // создание строки для таблицы
+        function row(composition) {
+
+            const tr = document.createElement("tr");
+            tr.setAttribute("data-rowid", composition.id);
+
+            const nameTd = document.createElement("td");
+            nameTd.append(composition.view);
+            tr.append(nameTd);
+
+            const linksTd = document.createElement("td");
+
+            const editLink = document.createElement("button");
+            editLink.append("Изменить");
+            editLink.addEventListener("click", async () => await getComposition(composition.id));
+            linksTd.append(editLink);
+
+            const removeLink = document.createElement("button");
+            removeLink.append("Удалить");
+            removeLink.addEventListener("click", async () => await getComposition(composition.id));
+
+            linksTd.append(removeLink);
+            tr.appendChild(linksTd);
+
+            return tr;
+        }
+        // сброс значений формы
+        document.getElementById("resetBtn").addEventListener("click", () =>  reset());
+
+        // отправка формы
+        document.getElementById("saveBtn").addEventListener("click", async () => {
+
+            const id = document.getElementById("compositionId").value;
+            const view = document.getElementById("view").value;
+            //const name = document.getElementById("userName").value;
+            //const age = document.getElementById("userAge").value;
+            if (id === "")
+                await createUser(name, age);
+            else
+                await editUser(id, name, age);
+            reset();
+        });
+
+        // загрузка пользователей
+        await getCompositions();
+    </script>
+</body>
+</html>

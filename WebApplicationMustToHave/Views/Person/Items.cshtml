@@ -1,0 +1,47 @@
+﻿@using WebApplicationMustToHave.Models;
+@model IEnumerable<IViewable>
+@{
+    ViewData["Title"] = "Люди";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Авторы, исполнители, автеры и т.д.</title>
+    <style>
+        td {
+        padding: 5px;
+        }
+
+        button {
+        margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Список персон</h2>
+    <div>
+        <input type="hidden" id="Id" />
+        <p>
+            <a asp-action="Edit">Добавить персону</a>
+            <button id="addBtn" action="Person/Edit">Добавить</button>
+            <button id="updateBtn" action="index.html">Отправить</button>
+        </p>
+    </div>
+    <form method="post">
+        <p>
+            <input type="submit" value="Редактировать" />
+        </p>
+        <p>
+            <label for="compositions">Выберите произведение для редактирования:</label><br />
+            <select multiple name="persons">
+                @foreach (var f in Model)
+                {
+                    <option value=@f.Id>@f.View</option>
+                }
+            </select>
+        </p>
+    </form>
+</body>
+</html>

@@ -1,0 +1,21 @@
+﻿@using WebApplicationMustToHave.Models;
+@model IComposition<int, uint?, string, double>
+
+@{
+    ViewData["Title"] = "Новый фильм";
+}
+<h2>Добавить фильм</h2>
+<form asp-action="CreateFilm" asp-controller="App">
+    <p>
+        <input type="number" asp-for="Id" />
+        <label asp-for="Name">Имя</label><br />
+        <input type="text" asp-for="Name" />
+    </p>
+    <p>
+        <label asp-for="YearBirth">Год выхода</label><br />
+        <input type="number" asp-for="YearBirth" />
+    </p>
+    <p>
+        <input type="submit" value="Добавить" />
+    </p>
+</form>
