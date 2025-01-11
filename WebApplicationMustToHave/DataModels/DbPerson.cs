@@ -2,37 +2,6 @@
 
 namespace WebApplicationMustToHave.DataModels
 {
-    ///// <summary>
-    ///// Представляет интерфейс человека с идентификатором, именем, фамилией и необязательными полями для указания отчества и года рождения.
-    ///// </summary>
-    //public interface IDbPerson
-    //{
-    //    /// <summary>
-    //    /// Уникальный идентификатор человека.
-    //    /// </summary>
-    //    uint Id { get; set; }
-
-    //    /// <summary>
-    //    /// Имя человека.
-    //    /// </summary>
-    //    string Name { get; set; }
-
-    //    /// <summary>
-    //    /// Фамилия человека.
-    //    /// </summary>
-    //    string Surname { get; set; }
-
-    //    /// <summary>
-    //    /// Отчество человека (необязательно).
-    //    /// </summary>
-    //    string? Patronymic { get; set; }
-
-    //    /// <summary>
-    //    /// Год рождения человека (необязательно).
-    //    /// </summary>
-    //    uint? YearBirth { get; set; }
-    //}
-
     /// <summary>
     /// Представляет объект человека с идентификатором, именем, фамилией и необязательными полями для указания отчества и года рождения.
     ///  Реализует интерфейс IDbPerson.

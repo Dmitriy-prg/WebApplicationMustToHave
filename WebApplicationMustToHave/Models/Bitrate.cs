@@ -10,7 +10,7 @@
         /// <summary>
         /// Возвращает или задает уникальный идентификатор битрейта.
         /// </summary>
-        public uint Id { get; set; }
+        public long Id { get; set; }
 
         /// <summary>
         /// Возвращает или устанавливает единицу измерения битрейта.
@@ -31,7 +31,7 @@
         /// <summary>
         /// Возвращает или задает уникальный идентификатор битрейта.
         /// </summary>
-        public required uint Id { get; set; }
+        public required long Id { get; set; }
 
         /// <summary>
         /// Возвращает или устанавливает единицу измерения битрейта.

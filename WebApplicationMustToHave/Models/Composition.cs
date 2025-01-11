@@ -15,7 +15,7 @@ namespace WebApplicationMustToHave.Models
         /// <summary>
         /// Возвращает или задает уникальный идентификатор произведения.
         /// </summary>
-        public uint Id { get; set; }
+        public long Id { get; set; }
 
         /// <summary>
         /// Возвращает или задает наименование произведения.
@@ -61,7 +61,7 @@ namespace WebApplicationMustToHave.Models
         /// <summary>
         /// Возвращает или задает уникальный идентификатор произведения.
         /// </summary>
-        public required uint Id { get; set; }
+        public required long Id { get; set; }
 
         /// <summary>
         /// Возвращает или задает наименование произведения.
@@ -98,7 +98,7 @@ namespace WebApplicationMustToHave.Models
         /// </summary>
         public List<IRating<double, IRatingVersion>>? Ratings { get; set; }
 
-        public static IComposition<int, uint?, string, double>? GetObjFromDb(IDbComposition? dbComposition)
+        public static IComposition<int, uint?, string, double>? GetObjFromDb(DbComposition? dbComposition)
         {
             if (dbComposition == null) return null;
             Composition composition = new()
@@ -107,7 +107,7 @@ namespace WebApplicationMustToHave.Models
                 Name = dbComposition.Name,
                 Type = CompositionType.GetObjFromDb(dbComposition.Type!),
                 Description = dbComposition.Description,
-                YearBirth = dbComposition.YearBirth
+                YearBirth = (uint)(dbComposition.YearBirth ?? 0)
             };
             //if (dbComposition.Volume != null) 
             //{
@@ -123,7 +123,7 @@ namespace WebApplicationMustToHave.Models
 
         public static async Task<IEnumerable<IComposition<int, uint?, string, double>>> GetCollectionsAsync(AppDbContext db)
         {
-            List<IDbComposition> dbCompositions = await new DbCompositionManager(db).GetCompositionsAsync(new CancellationTokenSource().Token);
+            List<DbComposition> dbCompositions = await new DbCompositionManager(db).GetCompositionsAsync(new CancellationTokenSource().Token);
             List<Composition> CompositionsList = [];
             foreach (var dbComposition in dbCompositions)
             {

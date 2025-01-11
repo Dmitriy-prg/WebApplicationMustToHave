@@ -20,21 +20,21 @@ namespace WebApplicationMustToHave.Repository
         /// Возвращает список всех персон
         /// </summary>
         /// <returns>список персон</returns>
-        public Task<List<IDbPerson>> GetPersonsAsync(CancellationToken cancellationToken);
+        public Task<List<DbPerson>> GetPersonsAsync(CancellationToken cancellationToken);
 
         /// <summary>
         /// Возвращает персону по id
         /// </summary>
         /// <param name="id">id персоны</param>
         /// <returns>персона</returns>
-        public Task<IDbPerson?> GetPersonByIdAsync(int id, CancellationToken cancellationToken);
+        public Task<DbPerson?> GetPersonByIdAsync(int id, CancellationToken cancellationToken);
 
         /// <summary>
         /// Добавляет персону
         /// </summary>
         /// <param name="dbPerson"></param>
         /// <returns></returns>
-        public Task AddPersonAsync(IDbPerson dbPerson, CancellationToken cancellationToken);
+        public Task AddPersonAsync(DbPerson dbPerson, CancellationToken cancellationToken);
 
         /// <summary>
         /// Обновляет персону
@@ -98,10 +98,10 @@ namespace WebApplicationMustToHave.Repository
         /// </summary>
         /// <param name="cancellationToken">токен отмены</param>
         /// <returns>список персон</returns>
-        public async Task<List<IDbPerson>> GetPersonsAsync(CancellationToken cancellationToken)
+        public async Task<List<DbPerson>> GetPersonsAsync(CancellationToken cancellationToken)
         {
             if (cancellationToken.IsCancellationRequested) return [];
-            List<IDbPerson> persons = await _db.Persons.Where(c => c != null).Select(c => (c as IDbPerson)!).ToListAsync();
+            List<DbPerson> persons = await _db.Persons.Where(c => c != null).Select(c => (c as DbPerson)!).ToListAsync();
             return persons ?? [];
         }
 
@@ -111,7 +111,7 @@ namespace WebApplicationMustToHave.Repository
         /// <param name="id">id персоны</param>
         /// <param name="cancellationToken">токен отмены</param>
         /// <returns>персона</returns>
-        public async Task<IDbPerson?> GetPersonByIdAsync(int id, CancellationToken cancellationToken)
+        public async Task<DbPerson?> GetPersonByIdAsync(int id, CancellationToken cancellationToken)
         {
             if (cancellationToken.IsCancellationRequested) return null;
             return await _db.Persons.FirstOrDefaultAsync(p => p.Id == id);
@@ -122,7 +122,7 @@ namespace WebApplicationMustToHave.Repository
         /// <param name="dbPerson"></param>
         /// <param name="cancellationToken">токен отмены</param>
         /// <returns></returns>
-        public async Task AddPersonAsync(IDbPerson dbPerson, CancellationToken cancellationToken)
+        public async Task AddPersonAsync(DbPerson dbPerson, CancellationToken cancellationToken)
         {
             if (dbPerson != null)
             {

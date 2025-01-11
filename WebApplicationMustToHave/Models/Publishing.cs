@@ -10,7 +10,7 @@ namespace WebApplicationMustToHave.Models
         /// <summary>
         /// Возвращает или задает уникальный идентификатор для издательства.
         /// </summary>
-        public uint Id { get; set; }
+        public long Id { get; set; }
 
         /// <summary>
         /// Возвращает или задает имя издательства.
@@ -31,7 +31,7 @@ namespace WebApplicationMustToHave.Models
         /// <summary>
         /// Возвращает или задает уникальный идентификатор для издательства.
         /// </summary>
-        public uint Id { get; set; }
+        public long Id { get; set; }
 
         /// <summary>
         /// Возвращает или задает имя издательства.

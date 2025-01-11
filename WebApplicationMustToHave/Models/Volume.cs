@@ -12,7 +12,7 @@ namespace WebApplicationMustToHave.Models
         /// <summary>
         /// Возвращает или задает уникальный идентификатор объема.
         /// </summary>
-        public uint Id { get; set; }
+        public long Id { get; set; }
 
         /// <summary>
         /// Возвращает или устанавливает единицу измерения объема.
@@ -33,7 +33,7 @@ namespace WebApplicationMustToHave.Models
         /// <summary>
         /// Возвращает или задает уникальный идентификатор объема.
         /// </summary>
-        public required uint Id { get; set; }
+        public required long Id { get; set; }
 
         /// <summary>
         /// Возвращает или устанавливает единицу измерения объема.

@@ -58,7 +58,7 @@ namespace WebApplicationMustToHave.Controllers
             if (person != null)
             { 
                 Console.WriteLine("Create" + ControllerContext.HttpContext.Request.Path + " - " + person?.Id + " : " + person?.Name + " : " + person?.YearBirth);
-                Task taskAdd = pm.AddPersonAsync((IDbPerson)person, new CancellationTokenSource().Token);
+                Task taskAdd = pm.AddPersonAsync(Person.CastToObjDb(person)!, new CancellationTokenSource().Token);
                 return RedirectToAction("Items");
             }
             return View();

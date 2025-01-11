@@ -11,7 +11,7 @@ namespace WebApplicationMustToHave.Models
         /// <summary>
         /// Возвращает или задает уникальный идентификатор для жанра.
         /// </summary>
-        public uint Id { get; set; }
+        public long Id { get; set; }
 
         /// <summary>
         /// Возвращает или задает тип жанра.
@@ -32,7 +32,7 @@ namespace WebApplicationMustToHave.Models
         /// <summary>
         /// Возвращает или задает уникальный идентификатор для жанра.
         /// </summary>
-        public uint Id { get; set; }
+        public long Id { get; set; }
 
         /// <summary>
         /// Возвращает или задает тип жанра.

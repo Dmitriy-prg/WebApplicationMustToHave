@@ -7,7 +7,7 @@ namespace WebApplicationMustToHave.Models
         /// <summary>
         /// Возвращает или задает уникальный идентификатор типа произведения.
         /// </summary>
-        public uint Id { get; set; }
+        public long Id { get; set; }
 
         /// <summary>
         /// Возвращает или задает название типа произведения.
@@ -20,14 +20,14 @@ namespace WebApplicationMustToHave.Models
         /// <summary>
         /// Возвращает или задает уникальный идентификатор типа произведения.
         /// </summary>
-        public required uint Id { get; set; }
+        public required long Id { get; set; }
 
         /// <summary>
         /// Возвращает или задает название типа произведения.
         /// </summary>
         public required string Name { get; set; }
 
-        public static CompositionType GetObjFromDb(IDbCompositionType dbCompositionType)
+        public static CompositionType GetObjFromDb(DbCompositionType dbCompositionType)
         { 
             return new CompositionType { Id = dbCompositionType.Id, Name = dbCompositionType.Name };
         }

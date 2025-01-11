@@ -5,7 +5,7 @@
         /// <summary>
         /// Возвращает или задает уникальный идентификатор для типа жанра.
         /// </summary>
-        public uint Id { get; set; }
+        public long Id { get; set; }
         /// <summary>
         /// Возвращает или задает наименование типа жанра.
         /// </summary>
@@ -17,7 +17,7 @@
         /// <summary>
         /// Возвращает или задает уникальный идентификатор для типа жанра.
         /// </summary>
-        public required uint Id { get; set; }
+        public required long Id { get; set; }
         /// <summary>
         /// Возвращает или задает наименование типа жанра.
         /// </summary>

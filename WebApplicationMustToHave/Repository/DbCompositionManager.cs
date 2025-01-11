@@ -31,7 +31,7 @@ namespace WebApplicationMustToHave.Repository
         /// </summary>
         /// <param name="cancellationToken">токен отмены</param>
         /// <returns>список всех произведений</returns>
-        public Task<List<IDbComposition>> GetCompositionsAsync(CancellationToken cancellationToken);
+        public Task<List<DbComposition>> GetCompositionsAsync(CancellationToken cancellationToken);
 
         /// <summary>
         /// Возвращает список всех произведений отфильтрованный по типу
@@ -39,7 +39,7 @@ namespace WebApplicationMustToHave.Repository
         /// <param name="typeId"> Книга = 1, Аудиокнига = 2, Фильм = 3, Песня = 4</param>
         /// <param name="cancellationToken">токен отмены</param>
         /// <returns>список</returns>
-        public Task<List<IDbComposition>> GetCompositionsByTypeAsync(int typeId, CancellationToken cancellationToken);
+        public Task<List<DbComposition>> GetCompositionsByTypeAsync(int typeId, CancellationToken cancellationToken);
 
         /// <summary>
         /// Возвращает произведение по id.
@@ -47,14 +47,14 @@ namespace WebApplicationMustToHave.Repository
         /// <param name="id">Ключ произведения</param>
         /// <param name="cancellationToken">токен отмены</param>
         /// <returns>произведение</returns>
-        public Task<IDbComposition?> GetCompositionByIdAsync(int id, CancellationToken cancellationToken);
+        public Task<DbComposition?> GetCompositionByIdAsync(int id, CancellationToken cancellationToken);
 
         /// <summary>
         /// Обновляет произведение.
         /// </summary>
         /// <param name="dbComposition">произведение</param>
         /// <param name="cancellationToken">токен отмены</param>
-        public Task UpdateCompositionAsync(IDbComposition dbComposition, CancellationToken cancellationToken);
+        public Task UpdateCompositionAsync(DbComposition dbComposition, CancellationToken cancellationToken);
 
         /// <summary>
         /// Удаляет произведение.
@@ -68,7 +68,7 @@ namespace WebApplicationMustToHave.Repository
         /// </summary>
         /// <param name="dbComposition">произведение</param>
         /// <param name="cancellationToken">токен отмены</param>
-        public Task AddCompositionAsync(IDbComposition dbComposition, CancellationToken cancellationToken);
+        public Task AddCompositionAsync(DbComposition dbComposition, CancellationToken cancellationToken);
 
         /// <summary>
         /// Получить тип произведения
@@ -76,7 +76,7 @@ namespace WebApplicationMustToHave.Repository
         /// <param name="typeId">Id произведения</param>
         /// <param name="cancellationToken">токен отмены</param>
         /// <returns>тип произведения</returns>
-        public Task<DbCompositionType?> GetCompositionTypeByIdAsync(uint typeId, CancellationToken cancellationToken);
+        public Task<DbCompositionType?> GetCompositionTypeByIdAsync(long typeId, CancellationToken cancellationToken);
     }
 
     /// <summary>
@@ -127,10 +127,10 @@ namespace WebApplicationMustToHave.Repository
         /// </summary>
         /// <param name="cancellationToken">токен отмены</param>
         /// <returns>список всех произведений</returns>
-        public async Task<List<IDbComposition>> GetCompositionsAsync(CancellationToken cancellationToken)
+        public async Task<List<DbComposition>> GetCompositionsAsync(CancellationToken cancellationToken)
         {
             if (cancellationToken.IsCancellationRequested) return [];
-            return await _db.Compositions.Select(c => c as IDbComposition).ToListAsync() ?? [];
+            return await _db.Compositions.Select(c => c as DbComposition).ToListAsync() ?? [];
         }
 
         // GET: DbCompositions
@@ -141,10 +141,10 @@ namespace WebApplicationMustToHave.Repository
         /// <param name="typeId"> Книга = 1, Аудиокнига = 2, Фильм = 3, Песня = 4</param>
         /// <param name="cancellationToken">токен отмены</param>
         /// <returns>список</returns>
-        public async Task<List<IDbComposition>> GetCompositionsByTypeAsync(int typeId, CancellationToken cancellationToken)
+        public async Task<List<DbComposition>> GetCompositionsByTypeAsync(int typeId, CancellationToken cancellationToken)
         {
             if (cancellationToken.IsCancellationRequested) return [];
-            return await _db.Compositions.Where(c => c.Type != null && c.Type.Id == typeId).Select(c => c as IDbComposition).ToListAsync() ?? [];
+            return await _db.Compositions.Where(c => c.Type != null && c.Type.Id == typeId).Select(c => c as DbComposition).ToListAsync() ?? [];
         }
 
         /// <summary>
@@ -153,10 +153,10 @@ namespace WebApplicationMustToHave.Repository
         /// <param name="id">Ключ произведения</param>
         /// <param name="cancellationToken">токен отмены</param>
         /// <returns>произведение</returns>
-        public async Task<IDbComposition?> GetCompositionByIdAsync(int id, CancellationToken cancellationToken)
+        public async Task<DbComposition?> GetCompositionByIdAsync(int id, CancellationToken cancellationToken)
         {
             if (cancellationToken.IsCancellationRequested) return null;
-            IDbComposition dbComposition = await _db.Compositions.Where(c => c.Type != null && c.Id == id).Select(c => c as IDbComposition).FirstOrDefaultAsync();
+            DbComposition dbComposition = await _db.Compositions.Where(c => c.Type != null && c.Id == id).Select(c => c as DbComposition).FirstOrDefaultAsync();
             if (dbComposition == null) return null;
             if (dbComposition.Type == null) dbComposition.Type = await GetCompositionTypeByIdAsync(dbComposition.DbCompositionTypeId, cancellationToken);
             return dbComposition;
@@ -167,7 +167,7 @@ namespace WebApplicationMustToHave.Repository
         /// </summary>
         /// <param name="dbComposition">произведение</param>
         /// <param name="cancellationToken">токен отмены</param>
-        public async Task UpdateCompositionAsync(IDbComposition dbComposition, CancellationToken cancellationToken)
+        public async Task UpdateCompositionAsync(DbComposition dbComposition, CancellationToken cancellationToken)
         {
             if (dbComposition != null)
             {
@@ -200,7 +200,7 @@ namespace WebApplicationMustToHave.Repository
         /// </summary>
         /// <param name="dbComposition">произведение</param>
         /// <param name="cancellationToken">токен отмены</param>
-        public async Task AddCompositionAsync(IDbComposition dbComposition, CancellationToken cancellationToken)
+        public async Task AddCompositionAsync(DbComposition dbComposition, CancellationToken cancellationToken)
         {
             if (dbComposition != null)
             {
@@ -221,7 +221,7 @@ namespace WebApplicationMustToHave.Repository
         /// <param name="typeId">Id произведения</param>
         /// <param name="cancellationToken">токен отмены</param>
         /// <returns>тип произведения</returns>
-        public async Task<DbCompositionType?> GetCompositionTypeByIdAsync(uint typeId, CancellationToken cancellationToken)
+        public async Task<DbCompositionType?> GetCompositionTypeByIdAsync(long typeId, CancellationToken cancellationToken)
         {
             if (cancellationToken.IsCancellationRequested) return null;
             return await _db.CompositionTypes.FirstOrDefaultAsync(c => c.Id == typeId);

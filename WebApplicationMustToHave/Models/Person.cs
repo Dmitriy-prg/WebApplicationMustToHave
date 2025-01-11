@@ -11,7 +11,7 @@ namespace WebApplicationMustToHave.Models
         /// <summary>
         /// Уникальный идентификатор человека.
         /// </summary>
-        uint Id { get; set; }
+        long Id { get; set; }
 
         /// <summary>
         /// Имя человека.
@@ -42,7 +42,7 @@ namespace WebApplicationMustToHave.Models
         /// <summary>
         /// Уникальный идентификатор человека.
         /// </summary>
-        public required uint Id { get; set; }
+        public required long Id { get; set; }
 
         /// <summary>
         /// Имя человека.
@@ -71,7 +71,7 @@ namespace WebApplicationMustToHave.Models
         /// </summary>
         public string View { get => Name + " " + Surname + " " + Patronymic ?? "" + " " + YearBirth + " г." ?? ""; }
 
-        public static IPerson? GetObjFromDb(IDbPerson? dbPerson)
+        public static IPerson? GetObjFromDb(DbPerson? dbPerson)
         {
             if (dbPerson == null) return null;
             Person person = new()
@@ -80,12 +80,12 @@ namespace WebApplicationMustToHave.Models
                 Name = dbPerson.Name,
                 Surname = dbPerson.Surname,
                 Patronymic = dbPerson.Patronymic,
-                YearBirth = dbPerson.YearBirth
+                YearBirth = (uint)dbPerson.YearBirth
             };
             return person;
         }
 
-        public static IDbPerson? CastToObjDb(IPerson? person)
+        public static DbPerson? CastToObjDb(IPerson? person)
         {
             if (person == null) return null;
             DbPerson dbPerson = new()
@@ -94,7 +94,7 @@ namespace WebApplicationMustToHave.Models
                 Name = person.Name,
                 Surname = person.Surname,
                 Patronymic = person.Patronymic,
-                YearBirth = person.YearBirth
+                YearBirth = (int)(person.YearBirth ?? 0)
             };
             return dbPerson;
         }
