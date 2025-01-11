@@ -8,7 +8,7 @@ namespace WebApplicationMustToHave.Models
         /// <summary>
         /// Уникальный идентификатор
         /// </summary>
-        public uint Id { get; set; }
+        public long Id { get; set; }
 
         /// <summary>
         /// Наименование
@@ -21,7 +21,7 @@ namespace WebApplicationMustToHave.Models
         /// <summary>
         /// Уникальный идентификатор
         /// </summary>
-        public uint Id { get; }
+        public long Id { get; }
 
         /// <summary>
         /// Получает строку-представление.

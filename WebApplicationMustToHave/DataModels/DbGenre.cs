@@ -2,42 +2,42 @@
 
 namespace WebApplicationMustToHave.DataModels
 {
+    ///// <summary>
+    ///// Представляет интерфейс жанра, со значением типа T.
+    ///// </summary>
+    ///// <typeparam name="T">Тип значения жанра.</typeparam>
+    //public interface IDbGenre<T> where T : class
+    //{
+    //    /// <summary>
+    //    /// Возвращает или задает уникальный идентификатор для жанра.
+    //    /// </summary>
+    //    public uint Id { get; set; }
+
+    //    /// <summary>
+    //    /// Возвращает или задает тип жанра.
+    //    /// </summary>
+    //    public DbGenreType GenreType { get; set; }
+
+    //    /// <summary>
+    //    /// Возвращает или устанавливает значение жанра.
+    //    /// </summary>
+    //    public T Value { get; set; }
+
+    //    /// <summary>
+    //    /// Возвращает или задает уникальный идентификатор типа жанра.
+    //    /// </summary>
+    //    public uint DbGenreTypeId { get; set; }
+    //}
+
     /// <summary>
-    /// Представляет интерфейс жанра, со значением типа T.
+    /// Представляет жанр произведения.
     /// </summary>
-    /// <typeparam name="T">Тип значения жанра.</typeparam>
-    public interface IDbGenre<T> where T : class
+    public class DbGenre
     {
         /// <summary>
         /// Возвращает или задает уникальный идентификатор для жанра.
         /// </summary>
-        public uint Id { get; set; }
-
-        /// <summary>
-        /// Возвращает или задает тип жанра.
-        /// </summary>
-        public DbGenreType GenreType { get; set; }
-
-        /// <summary>
-        /// Возвращает или устанавливает значение жанра.
-        /// </summary>
-        public T Value { get; set; }
-
-        /// <summary>
-        /// Возвращает или задает уникальный идентификатор типа жанра.
-        /// </summary>
-        public uint DbGenreTypeId { get; set; }
-    }
-
-    /// <summary>
-    /// Представляет объект жанра, реализует интерфейс IDbGenre.
-    /// </summary>
-    public class DbGenre: IDbGenre<string>
-    {
-        /// <summary>
-        /// Возвращает или задает уникальный идентификатор для жанра.
-        /// </summary>
-        public uint Id { get; set; }
+        public long Id { get; set; }
 
         /// <summary>
         /// Возвращает или задает тип жанра.
@@ -52,6 +52,6 @@ namespace WebApplicationMustToHave.DataModels
         /// <summary>
         /// Возвращает или задает уникальный идентификатор типа жанра.
         /// </summary>
-        public required uint DbGenreTypeId { get; set; }
+        public required long DbGenreTypeId { get; set; }
     }
 }

@@ -1,42 +1,42 @@
 ﻿namespace WebApplicationMustToHave.DataModels
 {
+    ///// <summary>
+    ///// Представляет интерфейс рейтинга, со значением типа T and версией типа R.
+    ///// </summary>
+    ///// <typeparam name="T">Тип значения рейтинга.</typeparam>
+    ///// <typeparam name="R">Тип версии рейтинга, который должен реализовывать интерфейс IRatingVersion.</typeparam>
+    //public interface IDbRating<T, R> where R : IDbRatingVersion<string?>
+    //{
+    //    /// <summary>
+    //    /// Возвращает или задает уникальный идентификатор для рейтинга.
+    //    /// </summary>
+    //    public uint Id { get; set; }
+
+    //    /// <summary>
+    //    /// Возвращает или задает версию рейтинга.
+    //    /// </summary>
+    //    public R Version { get; set; }
+
+    //    /// <summary>
+    //    /// Возвращает или устанавливает значение рейтинга.
+    //    /// </summary>
+    //    public T Value { get; set; }
+
+    //    /// <summary>
+    //    /// Возвращает или задает уникальный идентификатор для версии рейтинга.
+    //    /// </summary>
+    //    public uint? DbRatingVersionId { get; set; }
+    //}
+
     /// <summary>
-    /// Представляет интерфейс рейтинга, со значением типа T and версией типа R.
+    /// Представляет объект рейтинга.
     /// </summary>
-    /// <typeparam name="T">Тип значения рейтинга.</typeparam>
-    /// <typeparam name="R">Тип версии рейтинга, который должен реализовывать интерфейс IRatingVersion.</typeparam>
-    public interface IDbRating<T, R> where R : IDbRatingVersion<string?>
+    public class DbRating
     {
         /// <summary>
         /// Возвращает или задает уникальный идентификатор для рейтинга.
         /// </summary>
-        public uint Id { get; set; }
-
-        /// <summary>
-        /// Возвращает или задает версию рейтинга.
-        /// </summary>
-        public R Version { get; set; }
-
-        /// <summary>
-        /// Возвращает или устанавливает значение рейтинга.
-        /// </summary>
-        public T Value { get; set; }
-
-        /// <summary>
-        /// Возвращает или задает уникальный идентификатор для версии рейтинга.
-        /// </summary>
-        public uint? DbRatingVersionId { get; set; }
-    }
-
-    /// <summary>
-    /// Представляет объект рейтинга. Реализует интерфейс IDbRating.
-    /// </summary>
-    public class DbRating: IDbRating<double, DbRatingVersion>
-    {
-        /// <summary>
-        /// Возвращает или задает уникальный идентификатор для рейтинга.
-        /// </summary>
-        public uint Id { get; set; }
+        public long Id { get; set; }
 
         /// <summary>
         /// Возвращает или задает версию рейтинга.
@@ -53,6 +53,6 @@
         /// <summary>
         /// Возвращает или задает уникальный идентификатор для версии рейтинга.
         /// </summary>
-        public uint? DbRatingVersionId { get; set; }
+        public long? DbRatingVersionId { get; set; }
     }
 }

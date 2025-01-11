@@ -1,24 +1,30 @@
 ﻿namespace WebApplicationMustToHave.DataModels
 {
-    public interface IDbCompositionType
+    ///// <summary>
+    ///// Интерфейс, представляющий тип произведения.
+    ///// </summary>
+    //public interface IDbCompositionType
+    //{
+    //    /// <summary>
+    //    /// Возвращает или задает уникальный идентификатор типа произведения.
+    //    /// </summary>
+    //    public uint Id { get; set; }
+
+    //    /// <summary>
+    //    /// Возвращает или задает название типа произведения.
+    //    /// </summary>
+    //    public string Name { get; set; }
+    //}
+
+    /// <summary>
+    /// Класс, представляющий тип произведения.
+    /// </summary>
+    public class DbCompositionType
     {
         /// <summary>
         /// Возвращает или задает уникальный идентификатор типа произведения.
         /// </summary>
-        public uint Id { get; set; }
-
-        /// <summary>
-        /// Возвращает или задает название типа произведения.
-        /// </summary>
-        public string Name { get; set; }
-    }
-
-    public class DbCompositionType: IDbCompositionType
-    {
-        /// <summary>
-        /// Возвращает или задает уникальный идентификатор типа произведения.
-        /// </summary>
-        public required uint Id { get; set; }
+        public required long Id { get; set; }
 
         /// <summary>
         /// Возвращает или задает название типа произведения.

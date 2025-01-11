@@ -6,7 +6,7 @@ using WebApplicationMustToHave.DataModels;
 using WebApplicationMustToHave.Repository;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -23,13 +23,7 @@ builder.Services.AddTransient<IDbPersonManager, DbPersonManager>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
-}
-else
+if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI(options => // UseSwaggerUI is called only in Development.
@@ -38,6 +32,12 @@ else
         options.RoutePrefix = string.Empty;
     });
     app.UseDeveloperExceptionPage();
+}
+else
+{
+    app.UseExceptionHandler("/Home/Error");
+    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseHsts();
 }
 
 app.UseHttpsRedirection();

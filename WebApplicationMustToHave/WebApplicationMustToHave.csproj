@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <BaseOutputPath></BaseOutputPath>
+    <BaseOutputPath>C:\Users\ivanov.dv\source\repos\WebApplicationMustToHave\WebApplicationMustToHave\bin</BaseOutputPath>
   </PropertyGroup>
 
   <ItemGroup>

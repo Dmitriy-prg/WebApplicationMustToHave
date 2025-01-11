@@ -55,7 +55,7 @@ namespace WebApplicationMustToHave.Controllers
         [Route("Create")]
         public ActionResult Create(Person? person)
         {
-            if (ModelState.IsValid && person != null)
+            if (person != null)
             { 
                 Console.WriteLine("Create" + ControllerContext.HttpContext.Request.Path + " - " + person?.Id + " : " + person?.Name + " : " + person?.YearBirth);
                 Task taskAdd = pm.AddPersonAsync((IDbPerson)person, new CancellationTokenSource().Token);
@@ -88,7 +88,7 @@ namespace WebApplicationMustToHave.Controllers
         //public ActionResult Edit(int id, IFormCollection collection)
         public ActionResult Edit(Person? person)
         {
-            if (ModelState.IsValid && person != null)
+            if (person != null)
             {
                 //Если id = 0, то это создание
                 if (person.Id == 0)
@@ -114,7 +114,7 @@ namespace WebApplicationMustToHave.Controllers
         [Route("Delete/id")]
         public ActionResult Delete(int id)
         {
-            if (ModelState.IsValid && id > 0)
+            if (id > 0)
             {
                 Console.WriteLine("Delete : person.Id = " + id);
                 Task taskDel = pm.DeletePersonByIdAsync(id, new CancellationTokenSource().Token);

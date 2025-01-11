@@ -1,23 +1,31 @@
-﻿namespace WebApplicationMustToHave.DataModels
-{
-    public interface IDbBookBinder
-    {
-        /// <summary>
-        /// Возвращает или задает уникальный идентификатор переплета.
-        /// </summary>
-        public uint Id { get; set; }
-        /// <summary>
-        /// Возвращает или задает наименование переплета.
-        /// </summary>
-        public string Name { get; set; }
-    }
+﻿using WebApplicationMustToHave.Models;
 
-    public class DbBookBinder: IDbBookBinder
+namespace WebApplicationMustToHave.DataModels
+{
+    ///// <summary>
+    ///// Представляет собой переплет книги.
+    ///// </summary>
+    //public interface IDbBookBinder
+    //{
+    //    /// <summary>
+    //    /// Возвращает или задает уникальный идентификатор переплета.
+    //    /// </summary>
+    //    public uint Id { get; set; }
+    //    /// <summary>
+    //    /// Возвращает или задает наименование переплета.
+    //    /// </summary>
+    //    public string Name { get; set; }
+    //}
+
+    /// <summary>
+    /// Представляет собой переплет книги.
+    /// </summary>
+    public class DbBookBinder : IEntity
     {
         /// <summary>
         /// Возвращает или задает уникальный идентификатор переплета.
         /// </summary>
-        public required uint Id { get; set; }
+        public required long Id { get; set; }
         /// <summary>
         /// Возвращает или задает наименование переплета.
         /// </summary>
