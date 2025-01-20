@@ -1,12 +1,19 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
+using NLog.Web;
+
 //using Microsoft.IdentityModel.Tokens;
 using System.Reflection.Emit;
 using WebApplicationMustToHave.DataModels;
 using WebApplicationMustToHave.Repository;
+using WebApplicationMustToHave.Services;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 var builder = WebApplication.CreateBuilder();
+// Configure NLog as the logging provider
+builder.Logging.ClearProviders();  // Remove other loggers (optional)
+//builder.Logging.SetMinimumLevel(LogLevel.Trace); // Optional: Set the minimum level for logging
+builder.Host.UseNLog();  // Integrates NLog
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -19,6 +26,7 @@ builder.Services.AddDbContext<IAppDbContext, AppDbContext>();
 builder.Services.AddTransient<IDbCompositionManager, DbCompositionManager>();
 // добавляем DbPersonManager в качестве сервиса в приложение
 builder.Services.AddTransient<IDbPersonManager, DbPersonManager>();
+builder.Services.AddSingleton<ILoggerManager, LoggerManager>();
 
 var app = builder.Build();
 

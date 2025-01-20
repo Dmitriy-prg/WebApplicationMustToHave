@@ -36,21 +36,21 @@ namespace WebApplicationMustToHave.DataModels
         public int? YearBirth { get; set; }
 
         /// <summary>
-        /// Навигационное свойство.
+        /// Композиции, в которых участвовал человек, как автор. Навигационное свойство.
         /// </summary>
-        public List<DbComposition>? DbComposition_Authors { get; set; }
+        public List<DbComposition>? DbCompositionsOfAuthor { get; set; }
         /// <summary>
-        /// Навигационное свойство.
+        /// Композиции, в которых участвовал человек, как исполнитель. Навигационное свойство.
         /// </summary>
-        public List<DbComposition>? DbComposition_Performers { get; set; }
+        public List<DbComposition>? DbCompositionOfPerformer { get; set; }
         /// <summary>
-        /// Навигационное свойство.
+        /// Композиции, в которых участвовал человек, как композитор. Навигационное свойство.
         /// </summary>
-        public List<DbComposition>? DbComposition_Composers { get; set; }
+        public List<DbComposition>? DbCompositionOfComposer { get; set; }
         /// <summary>
-        /// Навигационное свойство.
+        /// Композиции, в которых участвовал человек, как режиссер. Навигационное свойство.
         /// </summary>
-        public List<DbComposition>? DbComposition_Directors { get; set; }
+        public List<DbComposition>? DbCompositionOfDirector { get; set; }
 
         /// <summary>
         /// Получает строку-представление человека.

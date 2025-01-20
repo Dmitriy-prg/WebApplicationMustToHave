@@ -1,14 +1,15 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using WebApplicationMustToHave.Models;
+using WebApplicationMustToHave.Services;
 
 namespace WebApplicationMustToHave.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<AppController> _logger;
+        protected readonly ILoggerManager _logger;
 
-        public HomeController(ILogger<AppController> logger)
+        public HomeController(ILoggerManager logger)
         {
             _logger = logger;
         }

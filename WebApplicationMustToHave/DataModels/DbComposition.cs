@@ -38,35 +38,70 @@ namespace WebApplicationMustToHave.DataModels
         public DbCompositionType? Type { get; set; }
 
         /// <summary>
+        /// Ключт типа произведения.
+        /// </summary>
+        public long DbCompositionTypeId { get; set; }
+
+        /// <summary>
         /// Возвращает или устанавливает переплет книги (необязательно).
         /// </summary>
         public DbBookBinder? Binder { get; set; }
 
+        /// <summary>
+        /// Ключ переплета книги (необязательно).
+        /// </summary>
+        public long? DbBookBinderId { get; set; }
+        
         /// <summary>
         /// Возвращает или задает объем произведения, с универсальным типом значения T и единицей измерения IMeasureUnit.
         /// </summary>
         public DbVolume? Volume { get; set; }
 
         /// <summary>
+        /// Ключ объема произведения (необязательно).
+        /// </summary>
+        public long? DbVolumeId { get; set; }
+        
+        /// <summary>
         /// Возвращает или устанавливает разрешение (кадра) (необязательно).
         /// </summary>
         public DbResolution? Resolution { get; set; }
 
+        /// <summary>
+        /// Ключ разрешения (кадра) (необязательно).
+        /// </summary>
+        public long? DbResolutionId { get; set; }
+        
         /// <summary>
         /// Возвращает или устанавливает издательство произведения (необязательно).
         /// </summary>
         public DbPublishing? Publishing { get; set; }
 
         /// <summary>
+        /// Ключ издательства произведения (необязательно).
+        /// </summary>
+        public long? DbPublishingId { get; set; }
+        
+        /// <summary>
         /// Возвращает или устанавливает битрейт видео произведения (необязательно).
         /// </summary>
         public DbBitrate? BitrateVideo { get; set; }
 
         /// <summary>
+        /// Ключ битрейта произведения (необязательно).
+        /// </summary>
+        public long? DbBitrateVideoId { get; set; }
+        
+        /// <summary>
         /// Возвращает или устанавливает битрейт аудио произведения (необязательно).
         /// </summary>
         public DbBitrate? BitrateAudio { get; set; }
 
+        /// <summary>
+        /// Ключ битрейта произведения (необязательно).
+        /// </summary>
+        public long? DbBitrateAudioId { get; set; }
+        
         /// <summary>
         /// Возвращает или задает список жанров произведения, с универсальным типом значения T (необязательно).
         /// </summary>
@@ -96,42 +131,7 @@ namespace WebApplicationMustToHave.DataModels
         /// Возвращает или задает список режиссеров произведения (необязательно).
         /// </summary>
         public List<DbPerson>? Directors { get; set; }
-
-        /// <summary>
-        /// Ключт типа произведения.
-        /// </summary>
-        public long DbCompositionTypeId { get; set; }
-
-        /// <summary>
-        /// Ключ переплета книги (необязательно).
-        /// </summary>
-        public long? DbBookBinderId { get; set; }
-
-        /// <summary>
-        /// Ключ объема произведения (необязательно).
-        /// </summary>
-        public long? DbVolumeId { get; set; }
-
-        /// <summary>
-        /// Ключ издательства произведения (необязательно).
-        /// </summary>
-        public long? DbPublishingId { get; set; }
-
-        /// <summary>
-        /// Ключ битрейта произведения (необязательно).
-        /// </summary>
-        public long? DbBitrate_BitrateVideoId { get; set; }
-
-        /// <summary>
-        /// Ключ битрейта произведения (необязательно).
-        /// </summary>
-        public long? DbBitrate_BitrateAudioId { get; set; }
-
-        /// <summary>
-        /// Ключ разрешения (кадра) (необязательно).
-        /// </summary>
-        public long? DbResolutionId { get; set; }
-
+        
         /// <summary>
         /// Получает строку-представление.
         /// </summary>

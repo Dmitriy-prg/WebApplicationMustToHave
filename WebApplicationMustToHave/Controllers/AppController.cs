@@ -5,6 +5,7 @@ using Microsoft.CodeAnalysis.Elfie.Serialization;
 using WebApplicationMustToHave.DataModels;
 using WebApplicationMustToHave.Models;
 using WebApplicationMustToHave.Repository;
+using WebApplicationMustToHave.Services;
 
 namespace WebApplicationMustToHave.Controllers
 {
@@ -14,8 +15,9 @@ namespace WebApplicationMustToHave.Controllers
     [Route("App")]
     public class AppController : Controller
     {
-        private readonly IAppDbContext _db;
-        private readonly IDbCompositionManager _cm;
+        protected readonly ILoggerManager _logger;
+        protected readonly IAppDbContext _db;
+        protected readonly IDbCompositionManager _cm;
 
         //private readonly List<Film> films = new List<Film>
         //{
@@ -28,12 +30,21 @@ namespace WebApplicationMustToHave.Controllers
         /// </summary>
         /// <param name="db">контекст БД</param>
         /// <param name="cm">Менеджер произведений</param>
-        public AppController(IAppDbContext db, IDbCompositionManager cm)
+        /// <param name="logger">логгер</param>
+        public AppController(IAppDbContext db, IDbCompositionManager cm, ILoggerManager logger = null)
         {
-            _db = db;
-            if (_db != null) Console.WriteLine("AppController() AppDbContext ID = " + ((AppDbContext)_db).ContextId);
-            _cm = cm;
-            if (_cm != null) Console.WriteLine("AppController() DbCompositionManager ID = " + ((DbCompositionManager)_cm).GetType());
+            if (logger != null)
+            {
+                _logger = logger;
+            }
+            if (db != null)
+            {
+                _db = db;
+            }
+            if (cm != null)
+            {
+                _cm = cm;
+            }
         }
 
         ///// <summary>
@@ -42,9 +53,9 @@ namespace WebApplicationMustToHave.Controllers
         ///// <returns></returns>
         //[HttpGet]
         //[Route("Items")]
-        //public async Task<IActionResult> Items()
+        //public async Task<IActionResult> ItemsAsync(CancellationToken cancellationToken = default)
         //{
-        //    List<IViewable> views = await _cm.GetCompositionViewsAsync(new CancellationTokenSource().Token);
+        //    List<IViewable> views = await _cm.GetCompositionViewsAsync(cancellationToken);
         //    Console.WriteLine("AppController Items().Count = " + views?.Count);
         //    return View(views);
         //}
@@ -54,22 +65,22 @@ namespace WebApplicationMustToHave.Controllers
         //public IActionResult Items(string compositionId)
         //{
         //    Console.WriteLine("compositions = " + compositionId);
-            
+
         //    //return RedirectToRoute("film", new { controller = "App", action = "Film", id = compositionId });
         //    return View();
         //}
 
         //[HttpGet]
         //[Route("Film")]
-        //public async Task<IActionResult> Film(int? id)
+        //public async Task<IActionResult> FilmAsync(int? id, CancellationToken cancellationToken = default)
         //{
         //    //int id = (Convert.ToInt32(RouteData.Values["id"] ?? 0));
         //    Console.WriteLine(ControllerContext.HttpContext.Request.Path + " - " + id);
         //    if (id != null)
         //    {
-        //        IComposition<int, uint?, string, double>? film = Models.Film.GetObjFromDb(
+        //        await IComposition<int, uint?, string, double>? film = Models.Film.GetObjFromDb(
         //                                    _cm.GetCompositionByIdAsync(Convert.ToInt32(id), 
-        //                                    new CancellationTokenSource().Token).Result);
+        //                                    cancellationToken));
         //        return View(film);
         //    }
         //    return View("CreateFilm");
@@ -77,12 +88,12 @@ namespace WebApplicationMustToHave.Controllers
 
         //[HttpPost]
         //[Route("Film")]
-        //public async Task<IActionResult> Film(Film? film)
+        //public async Task<IActionResult> FilmAsync(Film? film, CancellationToken cancellationToken = default)
         //{
         //    if (film != null)
         //    {
         //        Console.WriteLine(ControllerContext.HttpContext.Request.Path + " - " + film?.Id);
-        //        await _cm.UpdateCompositionAsync(film as IDbComposition, new CancellationTokenSource().Token);
+        //        await _cm.UpdateCompositionAsync(film as IDbComposition, cancellationToken);
         //        return RedirectToAction("Items");
         //    }
         //    return NotFound();
@@ -97,7 +108,7 @@ namespace WebApplicationMustToHave.Controllers
 
         //[HttpPost]
         //[Route("CreateFilm")]
-        //public async Task<IActionResult> CreateFilm(Film? film)
+        //public async Task<IActionResult> CreateFilmAsync(Film? film, CancellationToken cancellationToken = default)
         //{
         //    if (film != null)
         //    {
@@ -105,7 +116,7 @@ namespace WebApplicationMustToHave.Controllers
         //        film.Type = new CompositionType { Id = 3, Name = "Фильм" };
         //        var comp = film as Composition;
         //        //DbComposition composition = film as Composition;
-        //        await _cm.AddCompositionAsync(comp as IDbComposition, new CancellationTokenSource().Token);
+        //        await _cm.AddCompositionAsync(comp as IDbComposition, cancellationToken);
         //        return RedirectToAction("Items");
         //    }
         //    return NotFound();

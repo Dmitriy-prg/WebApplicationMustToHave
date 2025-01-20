@@ -9,8 +9,8 @@ namespace WebApplicationMustToHave.Repository
         public void Configure(EntityTypeBuilder<DbBitrate> builder)
         {
             builder.ToTable("bitrates");
-            builder.HasOne<DbComposition>().WithOne(c => c.BitrateVideo).HasForeignKey<DbComposition>(c => c.DbBitrate_BitrateVideoId);
-            builder.HasOne<DbComposition>().WithOne(c => c.BitrateAudio).HasForeignKey<DbComposition>(c => c.DbBitrate_BitrateAudioId);
+            builder.HasOne<DbComposition>().WithOne(c => c.BitrateVideo).HasForeignKey<DbComposition>(c => c.DbBitrateVideoId);
+            builder.HasOne<DbComposition>().WithOne(c => c.BitrateAudio).HasForeignKey<DbComposition>(c => c.DbBitrateAudioId);
         }
     }
 }

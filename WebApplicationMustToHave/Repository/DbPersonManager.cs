@@ -88,7 +88,7 @@ namespace WebApplicationMustToHave.Repository
         /// <returns>список представлений персон</returns>
         public async Task<List<IViewable>> GetPersonViewsAsync(CancellationToken cancellationToken)
         {
-            if (cancellationToken.IsCancellationRequested) return [];
+            if (cancellationToken != null && cancellationToken.IsCancellationRequested) return [];
             List<IViewable> persons = await _db.Persons.Where(c => c != null).Select(c => (c as IViewable)!).ToListAsync();
             return persons ?? [];
         }
@@ -100,7 +100,7 @@ namespace WebApplicationMustToHave.Repository
         /// <returns>список персон</returns>
         public async Task<List<DbPerson>> GetPersonsAsync(CancellationToken cancellationToken)
         {
-            if (cancellationToken.IsCancellationRequested) return [];
+            if (cancellationToken != null && cancellationToken.IsCancellationRequested) return [];
             List<DbPerson> persons = await _db.Persons.Where(c => c != null).Select(c => (c as DbPerson)!).ToListAsync();
             return persons ?? [];
         }
@@ -113,7 +113,7 @@ namespace WebApplicationMustToHave.Repository
         /// <returns>персона</returns>
         public async Task<DbPerson?> GetPersonByIdAsync(int id, CancellationToken cancellationToken)
         {
-            if (cancellationToken.IsCancellationRequested) return null;
+            if (cancellationToken != null && cancellationToken.IsCancellationRequested) return null;
             return await _db.Persons.FirstOrDefaultAsync(p => p.Id == id);
         }
         /// <summary>
@@ -126,16 +126,15 @@ namespace WebApplicationMustToHave.Repository
         {
             if (dbPerson != null)
             {
-                if (cancellationToken.IsCancellationRequested) return;
+                if (cancellationToken != null && cancellationToken.IsCancellationRequested) return;
                 if (dbPerson.Id == 0)
                 {
                     dbPerson.Id = _db.Persons.Count() == 0 ? 1 : _db.Persons.Select(c => c.Id).Max() + 1;
                 }
-                DbPerson persObj = (DbPerson)dbPerson;
                 _db.Persons.Load();
-                await _db.Persons.AddAsync(persObj);
+                await _db.Persons.AddAsync(dbPerson);
                 //await _db.Persons.AddAsync(dbPerson as DbPerson);
-                await _db.SaveChangesAsync(new CancellationTokenSource().Token);
+                await _db.SaveChangesAsync(cancellationToken);
             }
             else Console.WriteLine("!!!Warning AddPersonAsync() dbPerson = null");
         }
@@ -150,9 +149,9 @@ namespace WebApplicationMustToHave.Repository
         {
             if (dbPerson != null)
             {
-                if (cancellationToken.IsCancellationRequested) return;
+                if (cancellationToken != null && cancellationToken.IsCancellationRequested) return;
                 _db.Persons.Update(dbPerson);
-                await _db.SaveChangesAsync(new CancellationTokenSource().Token);
+                await _db.SaveChangesAsync(cancellationToken);
             }
             Console.WriteLine("!!!Warning UpdatePersonAsync() dbPerson = null");
         }
@@ -167,9 +166,9 @@ namespace WebApplicationMustToHave.Repository
         {
             if (dbPerson != null)
             {
-                if (cancellationToken.IsCancellationRequested) return;
+                if (cancellationToken != null && cancellationToken.IsCancellationRequested) return;
                 _db.Persons.Remove(dbPerson);
-                await _db.SaveChangesAsync(new CancellationTokenSource().Token);
+                await _db.SaveChangesAsync(cancellationToken);
             }
             Console.WriteLine("!!!Warning DeletePersonAsync() dbPerson = null");
         }
@@ -184,7 +183,7 @@ namespace WebApplicationMustToHave.Repository
         {
             if (id > 0)
             {
-                if (cancellationToken.IsCancellationRequested) return;
+                if (cancellationToken != null && cancellationToken.IsCancellationRequested) return;
                 DbPerson? dbPerson = await _db.Persons.FirstOrDefaultAsync(p => p.Id == id);
                 if (dbPerson != null) await DeletePersonAsync(dbPerson, cancellationToken);
             }

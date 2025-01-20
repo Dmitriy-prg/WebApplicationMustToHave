@@ -9,10 +9,10 @@ namespace WebApplicationMustToHave.Repository
         public void Configure(EntityTypeBuilder<DbComposition> builder)
         {
             builder.ToTable("compositions");
-            builder.HasMany(с => с.Authors).WithMany(p => p.DbComposition_Authors).UsingEntity("DbComposition_Authors_DbPerson");
-            builder.HasMany(с => с.Composers).WithMany(p => p.DbComposition_Composers).UsingEntity("DbComposition_Composers_DbPerson");
-            builder.HasMany(с => с.Directors).WithMany(p => p.DbComposition_Directors).UsingEntity("DbComposition_Directors_DbPerson");
-            builder.HasMany(с => с.Performers).WithMany(p => p.DbComposition_Performers).UsingEntity("DbComposition_Performers_DbPerson");
+            builder.HasMany(с => с.Authors).WithMany(p => p.DbCompositionsOfAuthor).UsingEntity("DbComposition_Authors_DbPerson");
+            builder.HasMany(с => с.Composers).WithMany(p => p.DbCompositionOfComposer).UsingEntity("DbComposition_Composers_DbPerson");
+            builder.HasMany(с => с.Directors).WithMany(p => p.DbCompositionOfDirector).UsingEntity("DbComposition_Directors_DbPerson");
+            builder.HasMany(с => с.Performers).WithMany(p => p.DbCompositionOfPerformer).UsingEntity("DbComposition_Performers_DbPerson");
         }
     }
 }

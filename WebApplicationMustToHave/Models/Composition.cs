@@ -121,9 +121,9 @@ namespace WebApplicationMustToHave.Models
             return composition;
         }
 
-        public static async Task<IEnumerable<IComposition<int, uint?, string, double>>> GetCollectionsAsync(AppDbContext db)
+        public static async Task<IEnumerable<IComposition<int, uint?, string, double>>> GetCollectionsAsync(AppDbContext db, CancellationToken cancellationToken)
         {
-            List<DbComposition> dbCompositions = await new DbCompositionManager(db).GetCompositionsAsync(new CancellationTokenSource().Token);
+            List<DbComposition> dbCompositions = await new DbCompositionManager(db).GetCompositionsAsync(cancellationToken);
             List<Composition> CompositionsList = [];
             foreach (var dbComposition in dbCompositions)
             {
