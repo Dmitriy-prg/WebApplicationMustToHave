@@ -22,10 +22,9 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddSwaggerGen();
 // добавляем контекст AppDbContext в качестве сервиса в приложение
 builder.Services.AddDbContext<IAppDbContext, AppDbContext>();
-// добавляем DbCompositionManager в качестве сервиса в приложение
-builder.Services.AddTransient<IDbCompositionManager, DbCompositionManager>();
-// добавляем DbPersonManager в качестве сервиса в приложение
-builder.Services.AddTransient<IDbPersonManager, DbPersonManager>();
+// добавляем DbManager в качестве сервиса в приложение
+builder.Services.AddScoped<DbManager>();
+// добавляем логгер LoggerManager в качестве сервиса в приложение
 builder.Services.AddSingleton<ILoggerManager, LoggerManager>();
 
 var app = builder.Build();

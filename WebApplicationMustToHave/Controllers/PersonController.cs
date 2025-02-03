@@ -15,33 +15,14 @@ namespace WebApplicationMustToHave.Controllers
     /// <param name="db"></param>
     /// <param name="pm"></param>
     [Route("Person")]
-    public class PersonController : Controller
+    public class PersonController : BaseController
     {
-        protected readonly ILoggerManager _logger;
-        protected readonly IAppDbContext _db;
-        protected readonly IDbPersonManager _pm;
-
         /// <summary>
         /// Контроллер
         /// </summary>
-        /// <param name="db">контекст БД</param>
-        /// <param name="cm">Менеджер произведений</param>
+        /// <param name="dm">Менеджер работы с базой</param>
         /// <param name="logger">логгер</param>
-        public PersonController(IAppDbContext db, IDbPersonManager pm, ILoggerManager logger = null)
-        {
-            if (logger != null)
-            {
-                _logger = logger;
-            }
-            if (db != null)
-            {
-                _db = db;
-            }
-            if (pm != null)
-            {
-                _pm = pm;
-            }
-        }
+        public PersonController(DbManager dm, ILoggerManager logger) : base(dm, logger) { }
 
         /// <summary>
         /// GET: Получить список персон
@@ -52,7 +33,7 @@ namespace WebApplicationMustToHave.Controllers
         [Route("Items")]
         public async Task<IActionResult> ItemsAsync(CancellationToken cancellationToken = default)
         {
-            List<IViewable> views = await _pm.GetPersonViewsAsync(cancellationToken);
+            List<IViewable> views = await _dm.GetViewsAsync<Person>(cancellationToken);
             _logger.LogInformation("AppController Items().Count = " + views?.Count); 
             return View(views);
         }
@@ -87,7 +68,7 @@ namespace WebApplicationMustToHave.Controllers
             if (person != null)
             {
                 _logger.LogInformation("Create" + ControllerContext.HttpContext.Request.Path + " - " + person?.Id + " : " + person?.Name + " : " + person?.YearBirth);
-                await _pm.AddPersonAsync(Person.CastToObjDb(person)!, cancellationToken);
+                await _dm.AddObjectAsync<DbPerson>(Person.CastToObjDb(person)!, cancellationToken);
                 return RedirectToAction("ItemsAsync");
             }
             return View();
@@ -124,12 +105,12 @@ namespace WebApplicationMustToHave.Controllers
                 if (person.Id == 0)
                 {
                     _logger.LogInformation("Create" + ControllerContext.HttpContext.Request.Path + " - " + person?.Id + " : " + person?.Name + " : " + person?.YearBirth);
-                    await _pm.AddPersonAsync(Person.CastToObjDb(person)!, cancellationToken);
+                    await _dm.AddObjectAsync<DbPerson>(Person.CastToObjDb(person)!, cancellationToken);
                     return RedirectToAction("Items");
                 }
 
                 _logger.LogInformation("Edit" + ControllerContext.HttpContext.Request.Path + " - " + person?.Id + " : " + person?.Name + " : " + person?.YearBirth);
-                await _pm.UpdatePersonAsync((DbPerson)Person.CastToObjDb(person)!, cancellationToken);
+                await _dm.UpdateObjectAsync<DbPerson>(Person.CastToObjDb(person)!, cancellationToken);
                 return RedirectToAction("Items");
             }
             return NotFound();
@@ -148,7 +129,7 @@ namespace WebApplicationMustToHave.Controllers
             if (id > 0)
             {
                 _logger.LogInformation("Delete : person.Id = " + id);
-                Task taskDel = _pm.DeletePersonByIdAsync(id, cancellationToken);
+                Task taskDel = _dm.DeleteObjectByIdAsync<DbPerson>(id, cancellationToken);
                 return RedirectToAction("ItemsAsync");
             }
             return NotFound();

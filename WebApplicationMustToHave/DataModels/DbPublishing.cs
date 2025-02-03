@@ -1,11 +1,12 @@
 ﻿using System.Xml.Linq;
+using WebApplicationMustToHave.Models;
 
 namespace WebApplicationMustToHave.DataModels
 {
     /// <summary>
     /// Представляет собой издательскую организацию.
     /// </summary>
-    public class DbPublishing
+    public class DbPublishing : IEntity
     {
         /// <summary>
         /// Возвращает или задает уникальный идентификатор для издательства.

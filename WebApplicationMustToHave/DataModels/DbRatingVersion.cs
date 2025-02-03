@@ -1,9 +1,11 @@
-﻿namespace WebApplicationMustToHave.DataModels
+﻿using WebApplicationMustToHave.Models;
+
+namespace WebApplicationMustToHave.DataModels
 {
     /// <summary>
     /// Представляет объект версии рейтинга.
     /// </summary>
-    public class DbRatingVersion
+    public class DbRatingVersion : IEntity
     {
         /// <summary>
         /// Возвращает или задает уникальный идентификатор для версии рейтинга.

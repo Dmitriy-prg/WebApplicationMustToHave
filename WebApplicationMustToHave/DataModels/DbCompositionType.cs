@@ -1,9 +1,11 @@
-﻿namespace WebApplicationMustToHave.DataModels
+﻿using WebApplicationMustToHave.Models;
+
+namespace WebApplicationMustToHave.DataModels
 {
     /// <summary>
     /// Класс, представляющий тип произведения.
     /// </summary>
-    public class DbCompositionType
+    public class DbCompositionType : IEntity
     {
         /// <summary>
         /// Возвращает или задает уникальный идентификатор типа произведения.

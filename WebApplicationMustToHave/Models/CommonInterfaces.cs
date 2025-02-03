@@ -3,26 +3,24 @@ using WebApplicationMustToHave.Repository;
 
 namespace WebApplicationMustToHave.Models
 {
-    public interface IEntity
+    public interface IBaseEntity<T>
     {
         /// <summary>
         /// Уникальный идентификатор
         /// </summary>
-        public long Id { get; set; }
+        public T Id { get; set; }
+    }
 
+    public interface IEntity : IBaseEntity<long>
+    {
         /// <summary>
         /// Наименование
         /// </summary>
         public string Name { get; set; }
     }
     
-    public interface IViewable
+    public interface IViewable : IBaseEntity<long>
     {
-        /// <summary>
-        /// Уникальный идентификатор
-        /// </summary>
-        public long Id { get; }
-
         /// <summary>
         /// Получает строку-представление.
         /// </summary>

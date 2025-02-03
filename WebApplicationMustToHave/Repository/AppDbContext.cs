@@ -1,6 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Hosting;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Reflection;
 using WebApplicationMustToHave.DataModels;
 
 namespace WebApplicationMustToHave.Repository
@@ -22,12 +25,14 @@ namespace WebApplicationMustToHave.Repository
         public DbSet<DbComposition> Compositions { get; set; }
         public DbSet<DbPerson> Persons { get; set; }
 
+        public DbSet<TEntity> GetDbSet<TEntity>() where TEntity : class;
         public Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 
 
-        public class AppDbContext: DbContext, IAppDbContext
+    public class AppDbContext: DbContext, IAppDbContext
     {
+        private readonly Dictionary<Type, Object> _objects = new Dictionary<Type, Object>();
         public DbSet<DbCompositionType> CompositionTypes { get; set; } = null!;
         public DbSet<DbGenreType> GenreTypes { get; set; } = null!;
         public DbSet<DbBookBinder> BookBinders { get; set; } = null!;
@@ -48,6 +53,47 @@ namespace WebApplicationMustToHave.Repository
             //Database.EnsureDeleted();
             //Database.EnsureCreated();
             ///*Add-Migration*/ InitialCreate   //Update-Database  //Remove-Migration
+            _objects = this.GetType().GetProperties().
+                Where(property => property.PropertyType.IsGenericType && property.PropertyType.GetGenericTypeDefinition() == typeof(DbSet<>)).
+                ToDictionary(property => property.PropertyType.GetGenericArguments()[0], property => property.GetValue(this));
+        }
+
+        public DbSet<TEntity> GetDbSet<TEntity>() where TEntity : class
+        {
+            if (_objects.TryGetValue(typeof(TEntity), out Object? obj))
+            {
+                return (DbSet<TEntity>)obj;
+            }
+            else
+            {
+                throw new ArgumentException("Type " + typeof(TEntity) + " not found");
+            }
+        }
+
+        public IEnumerable<T>? GetObjects<T>()
+        {
+            if (_objects.TryGetValue(typeof(T), out Object? obj))
+            {
+                return (IEnumerable<T>)obj;
+            }
+
+            PropertyInfo[] properties = GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.GetProperty)
+                .Where(prop => prop.PropertyType.IsAssignableTo(typeof(IEnumerable<T>)))
+                .ToArray();
+
+            if (properties.Length == 0)
+            {
+                throw new ArgumentException("Type " + typeof(T) + " not found");
+            }
+
+            if (properties.Length > 1)
+            {
+                throw new ArgumentException("Type " + typeof(T) + " more than one");
+            }
+
+            object result = properties.First().GetValue(this)!;
+            _objects[typeof(T)] = result;
+            return (IEnumerable<T>)result;
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken)
@@ -100,6 +146,18 @@ namespace WebApplicationMustToHave.Repository
                 new DbCompositionType { Id = 3, Name = "Фильм" },
                 new DbCompositionType { Id = 4, Name = "Песня" }
             );
+        }
+
+        //public DbSet<T>? GetDbSet(Object obj)
+        public bool GetDbSet(Object obj)
+        {
+            var members = this.GetType().GetMembers(BindingFlags.Instance | BindingFlags.Public);
+            foreach (var member in members)
+            {
+                string stName = member.Name;
+                if (member.GetType() == obj.GetType()) return true;
+            }
+            return false;
         }
     }
 }

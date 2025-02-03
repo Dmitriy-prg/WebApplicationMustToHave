@@ -24,7 +24,7 @@
     /// <summary>
     /// Представляет класс единиц измерения, который реализует интерфейс IMeasureUnit.
     /// </summary>
-    public class MeasureUnit : IMeasureUnit
+    public class MeasureUnit : IMeasureUnit, IEntity, IViewable
     {
         /// <summary>
         /// Возвращает или задает уникальный идентификатор единицы измерения.
@@ -43,5 +43,10 @@
         /// </summary>
         /// <remarks>Это свойство является обязательным и не может иметь значения null.</remarks>
         public required string ShortName { get; set; }
+
+        /// <summary>
+        /// Получает строку-представление человека.
+        /// </summary>
+        public string View { get => ShortName; }
     }
 }

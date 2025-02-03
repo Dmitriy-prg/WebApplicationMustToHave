@@ -6,7 +6,7 @@ namespace WebApplicationMustToHave.DataModels
     /// Представляет объект человека с идентификатором, именем, фамилией и необязательными полями для указания отчества и года рождения.
     ///  Реализует интерфейс IDbPerson.
     /// </summary>
-    public class DbPerson : IViewable
+    public class DbPerson : IViewable, IEntity
     {
         /// <summary>
         /// Уникальный идентификатор человека.

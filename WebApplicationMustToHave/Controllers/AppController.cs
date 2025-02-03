@@ -13,12 +13,8 @@ namespace WebApplicationMustToHave.Controllers
     /// Основной онтроллер
     /// </summary>
     [Route("App")]
-    public class AppController : Controller
+    public class AppController : BaseController
     {
-        protected readonly ILoggerManager _logger;
-        protected readonly IAppDbContext _db;
-        protected readonly IDbCompositionManager _cm;
-
         //private readonly List<Film> films = new List<Film>
         //{
         //    new Film { Id = 1, Name = "Аватар", YearBirth = 2009, Type = new CompositionType { Id = 3, Name = "Фильм" } },
@@ -28,23 +24,11 @@ namespace WebApplicationMustToHave.Controllers
         /// <summary>
         /// Основной контроллер
         /// </summary>
-        /// <param name="db">контекст БД</param>
         /// <param name="cm">Менеджер произведений</param>
         /// <param name="logger">логгер</param>
-        public AppController(IAppDbContext db, IDbCompositionManager cm, ILoggerManager logger = null)
+        public AppController(DbManager dm, ILoggerManager logger) : base(dm, logger)
         {
-            if (logger != null)
-            {
-                _logger = logger;
-            }
-            if (db != null)
-            {
-                _db = db;
-            }
-            if (cm != null)
-            {
-                _cm = cm;
-            }
+
         }
 
         ///// <summary>
